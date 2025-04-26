@@ -86,7 +86,7 @@ function ValuesTable(props: {section_id: number}) {
 
                                                 </div>
                                             </td>
-                                            <td className="text-center">
+                                            <td className="whitespace-nowrap">
                                                 <div className="flex gap-2 items-center">
                                                     {value.expirationDate ? (() => {
                                                         const now = new Date();
@@ -105,7 +105,7 @@ function ValuesTable(props: {section_id: number}) {
                                                     })() : <span className="italic text-gray-500">No expiration date</span>}
                                                 </div>
                                             </td>
-                                            <td className="text-center">
+                                            <td className="flex gap-1 items-center">
                                                 <button className="btn btn-ghost btn-circle btn-xs" onClick={() => setValueToEdit(value)}>
                                                     <EditIcon className="w-4" />
                                                 </button>
