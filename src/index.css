@@ -1,0 +1,93 @@
+@import "tailwindcss";
+@plugin "daisyui" {
+  themes: dark --default, light --light
+}
+
+* {
+  outline: none;
+}
+
+.btn {
+  @apply brightness-100 hover:brightness-90 shadow-none;
+}
+.btn-primary {
+  @apply brightness-90 hover:brightness-75;
+}
+.btn-error {
+  @apply brightness-90 hover:brightness-75;
+}
+
+
+h1 {
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 700;
+}
+h2 {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  font-weight: 600;
+}
+h3 {
+  font-size: 1.125rem;
+  line-height: 1.5rem;
+  font-weight: 600;
+}
+h4 {
+  font-size: 1rem;
+  line-height: 1.5rem;
+  font-weight: 600;
+}
+h5 {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 600;
+}
+textarea {
+  resize: none;
+  field-sizing: content;
+}
+
+:has(> .active-link-menu-project) {
+  @apply text-base-content/60 bg-base-content/5;
+}
+.active-link-menu-project {
+  @apply pointer-events-none;
+}
+.active-link-menu-section {
+  @apply pointer-events-none text-base-content/60 bg-base-content/5;
+}
+.active-link-breadcrumb {
+  @apply pointer-events-none text-base-content/60;
+}
+
+.menu-hover {
+  --menu-active-bg: var(--tw-prose-pre-bg);
+  --menu-active-fg: var(--tw-prose-pre-bg);
+}
+
+#page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.25rem;
+
+  .head-c {
+    display: flex;
+    gap: .5rem;
+    justify-content: space-between;
+  }
+
+  .head-r {
+    display: flex;
+    gap: .5rem;
+    flex-direction: column;
+  }
+
+  .content {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-auto-rows: 100px;
+    gap: 1rem;
+  }
+}
