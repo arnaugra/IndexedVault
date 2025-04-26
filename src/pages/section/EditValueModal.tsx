@@ -2,7 +2,7 @@ import ModalComponent from "../../components/ModalComponent";
 import InputField from "../../components/InputField";
 import useValueStore, { ValueTypes } from "../../stores/ValueStore";
 import useValuesStore from "../../stores/ValuesStore";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Value } from "../../db/Value";
 import { ValueI } from "../../db/interfaces";
 
@@ -14,6 +14,8 @@ interface EditValueModalProps {
 }
 
 function EditValueModal (props: EditValueModalProps) {
+  const [isLoadingExistingValue, setIsLoadingExistingValue] = useState(false);
+
   const setValues = useValuesStore((state) => state.setValues);
 
   const valueName = useValueStore((state) => state.valueName);
@@ -32,12 +34,18 @@ function EditValueModal (props: EditValueModalProps) {
 
   const valueType = useValueStore((state) => state.valueType);
   const setValueType = useValueStore((state) => state.setValueType);
-  const handleValueType = (e: React.ChangeEvent<HTMLSelectElement>) => setValueType(e.target.value as ValueTypes);
+  const handleValueType = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setValueType(e.target.value as ValueTypes);
+    setValueValue(undefined);
+    setValueValueError(false);
+  }
 
   useEffect(() => {
-    setValueValue(undefined);
+    if (!isLoadingExistingValue) {
+      setValueValue(undefined);
+    }
   }
-  , [valueType, setValueValue]);
+  , [valueType, setValueValue, isLoadingExistingValue]);
 
   const valueExpirationDate = useValueStore((state) => state.valueExpirationDate);
   const setValueExpirationDate = useValueStore((state) => state.setValueExpirationDate);
@@ -47,14 +55,19 @@ function EditValueModal (props: EditValueModalProps) {
 
   useEffect(() => {
     if (props.open && props.value) {
+      setIsLoadingExistingValue(true);
       setValueName(props.value.name);
       setValueValue(props.value.value);
       setValueType(props.value.type as ValueTypes);
       setValueExpirationDate(props.value.expirationDate ?? undefined);
       setValueNameError(false);
       setValueValueError(false);
+
+      setTimeout(() => {
+        setIsLoadingExistingValue(false);
+      }, 100);
     }
-  }, [props.open, props.value, setValueName, setValueValue, setValueType, setValueExpirationDate, setValueNameError, setValueValueError]);
+  }, [props.open, props.value, setValueName, setValueValue, setValueType, setValueExpirationDate, setValueNameError, setValueValueError, isLoadingExistingValue]);
 
   const createNewProject = async () => {
     if (!valueName || !valueValue) {
