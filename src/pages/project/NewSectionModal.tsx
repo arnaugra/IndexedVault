@@ -27,7 +27,7 @@ function NewSectionModal (props: {project_id: number}) {
     setSectionDescription(undefined)
     setSectionNameError(false)
   }
-  , [openNewSection])
+  , [openNewSection, setSectionName, setSectionDescription, setSectionNameError]);
 
   const createNewSection = async () => {
     if (!sectionName) {

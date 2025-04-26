@@ -13,7 +13,7 @@ function HomePage () {
   useEffect(() => {
     setProjects();
   }
-  , []);
+  , [setProjects]);
 
   return (
     <section id="page">

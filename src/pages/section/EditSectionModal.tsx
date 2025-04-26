@@ -27,7 +27,7 @@ function EditSectionModal (props: {section_id: number}) {
       setNewSectionDescription(sectionDescription)
       setSectionNameError(false)
     }
-    , [openNewSection])
+    , [openNewSection, sectionName, sectionDescription, setSectionNameError]);
 
     const editNewSection = async () => {
       if (!newSectionName) {

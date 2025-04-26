@@ -28,6 +28,7 @@ function SideTree() {
         setTree();
     }
     , [
+        setTree,
         projects, projectName, projectDescription,
         sections, sectionName, sectionDescription,
     ]);

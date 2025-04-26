@@ -21,21 +21,22 @@ function ProjectPage() {
     const sections = useSectionsStore((state) => state.sections);
     const setSections = useSectionsStore((state) => state.setSections);
 
-    const fetchProject = async () => {
-        const pageProject = await Project.getById(project_id);
-
-        if (pageProject) {
-            setProjectName(pageProject.name);
-            setProjectDescription(pageProject.description);
-        } else {
-            navigate("/404");
-        }
-        
-    };
+;
     useEffect(() => {
+        const fetchProject = async () => {
+            const pageProject = await Project.getById(project_id);
+
+            if (pageProject) {
+                setProjectName(pageProject.name);
+                setProjectDescription(pageProject.description);
+            } else {
+                navigate("/404");
+            }
+            
+        }
         fetchProject();
         setSections(project_id);
-    }, []);
+    }, [project_id, setSections, setProjectName, setProjectDescription, navigate]);
 
     const [openConfirmationModal, setOpenConfirmationModal] = useState(false);
     const deleteProject = async () => {

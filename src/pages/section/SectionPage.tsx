@@ -23,21 +23,21 @@ function SectionPage () {
 
     const setValues = useValuesStore((state) => state.setValues);
 
-    const fetchSection = async () => {
-        const pageSection = await Section.getById(section_id);
-        if (pageSection) {
-            setSectionName(pageSection.name);
-            setSectionDescription(pageSection.description);
-            
-        } else {
-            navigate("/404");
-        }
-    };
     useEffect(() => {
+        const fetchSection = async () => {
+            const pageSection = await Section.getById(section_id);
+            if (pageSection) {
+                setSectionName(pageSection.name);
+                setSectionDescription(pageSection.description);
+                
+            } else {
+                navigate("/404");
+            }
+        }
         fetchSection();
         setValues(section_id);
 
-    }, []);
+    }, [navigate, section_id, setSectionDescription, setSectionName, setValues]);
 
     const [openConfirmationModal, setOpenConfirmationModal] = useState(false);
     const deleteProject = async () => {

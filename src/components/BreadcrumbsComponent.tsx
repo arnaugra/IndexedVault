@@ -46,7 +46,7 @@ function BreadcrumbsComponent(props: BreadcrumbsComponentProps) {
         fetchProject();
         fetchSection();
     }
-    , []);
+    , [project_id, section_id, setProjectName, setSectionName]);
 
   return (
     <div className="flex justify-start items-center gap-1 w-full">

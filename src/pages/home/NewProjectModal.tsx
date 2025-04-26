@@ -27,7 +27,7 @@ function NewProjectModal () {
         setProjectDescription(undefined)
         setProjectNameError(false)
     }
-    , [openNewProject])
+    , [openNewProject, setProjectName, setProjectDescription, setProjectNameError]);
   
     const createNewProject = async () => {
       if (!projectName) {

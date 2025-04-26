@@ -26,7 +26,7 @@ function EditProjectModal (props: {project_id: number}) {
       setNewProjectName(projectName)
       setNewProjectDescription(projectDescription)
     }
-    , [openNewProject])
+    , [openNewProject, setNewProjectName, setNewProjectDescription, projectName, projectDescription]);
 
     const editNewProject = async () => {
       if (!projectName) {

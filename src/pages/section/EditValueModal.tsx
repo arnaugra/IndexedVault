@@ -37,7 +37,7 @@ function EditValueModal (props: EditValueModalProps) {
   useEffect(() => {
     setValueValue(undefined);
   }
-  , [valueType])
+  , [valueType, setValueValue]);
 
   const valueExpirationDate = useValueStore((state) => state.valueExpirationDate);
   const setValueExpirationDate = useValueStore((state) => state.setValueExpirationDate);
@@ -54,7 +54,7 @@ function EditValueModal (props: EditValueModalProps) {
       setValueNameError(false);
       setValueValueError(false);
     }
-  }, [props.open, props.value]);
+  }, [props.open, props.value, setValueName, setValueValue, setValueType, setValueExpirationDate, setValueNameError, setValueValueError]);
 
   const createNewProject = async () => {
     if (!valueName || !valueValue) {

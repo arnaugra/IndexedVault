@@ -31,7 +31,7 @@ function ValueModal (props: {section_id: number}) {
   useEffect(() => {
     setValueValue(undefined);
   }
-  , [valueType])
+  , [valueType, setValueValue]);
 
   const valueExpirationDate = useValueStore((state) => state.valueExpirationDate);
   const setValueExpirationDate = useValueStore((state) => state.setValueExpirationDate);
@@ -47,7 +47,7 @@ function ValueModal (props: {section_id: number}) {
     setValueType(ValueTypes.TEXT)
     setValueExpirationDate(undefined)
   }
-  , [openValue])
+  , [openValue, setValueName, setValueValue, setValueType, setValueExpirationDate, setValueNameError, setValueValueError]);
 
   const createNewProject = async () => {
     if (!valueName || !valueValue) {
