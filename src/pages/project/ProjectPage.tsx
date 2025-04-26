@@ -9,7 +9,7 @@ import NewSectionModal from "./NewSectionModal";
 import ConfirmModalComponent from "../../components/ConfirmModalComponent";
 import BreadcrumbsComponent from "../../components/BreadcrumbsComponent";
 
-function projectPage() {
+function ProjectPage() {
     const [, navigate] = useLocation();
     const match = useRoute<{project_id: string}>("/project/:project_id")[1];
     const project_id = Number(match?.project_id);
@@ -84,4 +84,4 @@ function projectPage() {
   );
 }
 
-export default projectPage;
+export default ProjectPage;
