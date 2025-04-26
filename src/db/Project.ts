@@ -32,7 +32,8 @@ export class Project extends Model<ProjectI, "id"> {
     }
 
     static async update(id: number, updates: Partial<ProjectI>) {
-        const { sections, ...updateData } = updates;
+        const updateData = { ...updates };
+        delete updateData.sections;
         await db.projects.update(id, updateData);
         return this.getById(id);
     }
