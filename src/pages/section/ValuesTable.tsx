@@ -98,7 +98,7 @@ function ValuesTable(props: {section_id: number}) {
 
                                                         return (
                                                             <div className={`w-full badge badge-soft ${badgeClass} tooltip`} data-tip={dateFormat(value.expirationDate)}>
-                                                                {/* @ts-ignore */}
+                                                                {/* @ts-expect-error error when using relative-time component (but working) */}
                                                                 <relative-time datetime={value.expirationDate} />
                                                             </div>
                                                         )
