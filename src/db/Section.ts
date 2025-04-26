@@ -32,7 +32,8 @@ export class Section extends Model<SectionI, "id"> {
     }
   
     static async update(id: number, updates: Partial<SectionI>) {
-      const { values, ...updateData } = updates;
+      const updateData = updates;
+      delete updateData.values;
       await db.sections.update(id, updateData);
       return this.getById(id);
     }
