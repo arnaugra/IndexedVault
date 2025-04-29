@@ -5,6 +5,7 @@ import SideTree from "./SideTree";
 import { Link } from "wouter";
 import ThemeChanger from "./ThemeChanger";
 import EncryptModal from "./EncryptModal";
+import ToastComponent from "../components/ToastComponent";
 
 function AppLayout({ children }: { children: React.ReactNode }) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -15,6 +16,11 @@ function AppLayout({ children }: { children: React.ReactNode }) {
             md:grid-cols-[20rem_1fr] md:grid-rows-[4rem_1fr]
             xl:grid-cols-[20rem_1fr] xl:grid-rows-[4rem_1fr]
         ">
+
+            <ToastComponent />
+
+            {/* Header */}
+            <header className="flex items-center gap-4 p-4
             {/* Header */}
             <header className="flex items-center gap-4 p-4
                 md:col-start-1 md:row-start-1 md:row-end-2 md:col-end-2
