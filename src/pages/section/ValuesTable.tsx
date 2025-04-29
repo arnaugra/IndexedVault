@@ -11,6 +11,9 @@ import CopyIcon from "../../svg/CopyIcon";
 import TextIcon from "../../svg/TextIcon";
 import PasswordIcon from "../../svg/PasswordIcon";
 import CalendarIcon from "../../svg/CalendarIcon";
+import useEncryptStore from "../../stores/EncryptStore";
+import { decrypt } from "../../utils/encrypt";
+import LockOpenIcon from "../../svg/LockOpenIcon";
 
 function ValuesTable(props: {section_id: number}) {
 
@@ -20,6 +23,8 @@ function ValuesTable(props: {section_id: number}) {
     const [valueToEdit, setValueToEdit] = useState<ValueI | null>(null);
 
     const [valueIdToDelete, setValueIdToDelete] = useState<number | null>(null);
+
+    const encryptionKey = useEncryptStore((state) => state.encryptionKey);
 
     const deleteValue = async (id: number) => {
         await Value.delete(id);
@@ -31,6 +36,7 @@ function ValuesTable(props: {section_id: number}) {
 
     return (
         <>
+        {encryptionKey}
             {
                 values.length === 0 
                     ?   <p className="text-gray-600">No values found.</p>
@@ -76,13 +82,23 @@ function ValuesTable(props: {section_id: number}) {
                                                                 </div>
                                                                 <div className="divider divider-horizontal mx-0.5"></div>
                                                                 <span>{value.value}</span>
+
+                                                                {encryptionKey
+                                                                    ?   (<button className="btn btn-ghost btn-circle btn-xs" onClick={async () => navigator.clipboard.writeText(await decrypt(value.value as string, encryptionKey) as string)}>
+                                                                            <CopyIcon className="w-4 mt-1 cursor-pointer" />
+                                                                        </button>)
+                                                                    :   (<div className="btn btn-ghost btn-circle btn-xs tooltip" data-tip="Add Encryption Key">
+                                                                            <LockOpenIcon className="w-4 mt-1 text-error cursor-pointer" />
+                                                                         </div>)
+                                                                }
                                                             </>,
 
                                                     }[value.type]}
 
-                                                    <button className="btn btn-ghost btn-circle btn-xs" onClick={() => navigator.clipboard.writeText(value.value as string)}>
-                                                        <CopyIcon className="w-4 mt-1 cursor-pointer" />
-                                                    </button>
+                                                    {ValueTypes.PASSWORD !== value.type && 
+                                                        <button className="btn btn-ghost btn-circle btn-xs" onClick={() => navigator.clipboard.writeText(value.value as string)}>
+                                                            <CopyIcon className="w-4 mt-1 cursor-pointer" />
+                                                        </button>}
 
                                                 </div>
                                             </td>

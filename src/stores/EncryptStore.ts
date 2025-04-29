@@ -9,6 +9,7 @@ interface EncryptStore {
     saveEncryptionKey: () => void;
     loadEncryptionKey: () => void;
     deleteEncryptionKey: () => void;
+    getEncryptionKey: () => string | null;
 }
 
 const useEncryptStore = create<EncryptStore>((set) => ({
@@ -33,12 +34,8 @@ const useEncryptStore = create<EncryptStore>((set) => ({
     deleteEncryptionKey: () => {
         set({ encryptionKey: null });
         sessionStorage.removeItem("encryptionKey");
-    }
+    },
+    getEncryptionKey: () => sessionStorage.getItem("encryptionKey")
 }));
 
-function getEncryptionKey () {
-    return sessionStorage.getItem("encryptionKey") ?? null;
-}
-
 export default useEncryptStore;
-export { getEncryptionKey };

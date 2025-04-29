@@ -6,9 +6,18 @@ import { Link } from "wouter";
 import ThemeChanger from "./ThemeChanger";
 import EncryptModal from "./EncryptModal";
 import ToastComponent from "../components/ToastComponent";
+import useEncryptStore from "../stores/EncryptStore";
+import LockCloseIcon from "../svg/LockCloseIcon";
+import LockOpenIcon from "../svg/LockOpenIcon";
 
 function AppLayout({ children }: { children: React.ReactNode }) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
+
+    const setOpenModalEncrypt = useEncryptStore((state) => state.setOpenModal);
+    const encryptionKey = useEncryptStore((state) => state.encryptionKey);
+    const loadEncryptionKey = useEncryptStore((state) => state.loadEncryptionKey);
+
+    loadEncryptionKey();
 
     return (
         <div className="grid h-dvh
@@ -17,10 +26,10 @@ function AppLayout({ children }: { children: React.ReactNode }) {
             xl:grid-cols-[20rem_1fr] xl:grid-rows-[4rem_1fr]
         ">
 
+            <EncryptModal />
+
             <ToastComponent />
 
-            {/* Header */}
-            <header className="flex items-center gap-4 p-4
             {/* Header */}
             <header className="flex items-center gap-4 p-4
                 md:col-start-1 md:row-start-1 md:row-end-2 md:col-end-2
@@ -47,7 +56,9 @@ function AppLayout({ children }: { children: React.ReactNode }) {
                 <div className="flex justify-evenly gap-4 p-4">
                     
                     <div className="tooltip flex items-center w-min" data-tip="Add Encryption Key">
-                        <EncryptModal />
+                        <button className="btn btn-circle btn-ghost" onClick={() => setOpenModalEncrypt(true)}>
+                            {encryptionKey ? <LockCloseIcon className="w-5 text-success" /> : <LockOpenIcon className="w-5 text-error" />}
+                        </button>
                     </div>
                     
                     <div className="tooltip flex items-center w-min" data-tip="Change Theme">
