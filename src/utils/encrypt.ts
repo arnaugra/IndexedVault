@@ -1,3 +1,5 @@
+import useErrorStore from "../stores/ErrorStore";
+
 export async function encrypt(text: string, password: string): Promise<string> {
     const encoder = new TextEncoder();
 
@@ -25,27 +27,37 @@ export async function encrypt(text: string, password: string): Promise<string> {
     return btoa(String.fromCharCode(...encryptedBytes));
 }
 
-export async function decrypt(encrypted: string, password: string): Promise<string> {
-    const data = Uint8Array.from(atob(encrypted), c => c.charCodeAt(0));
-
-    const salt = data.slice(0, 16);
-    const iv = data.slice(16, 28);
-    const ciphertext = data.slice(28);
-
-    const keyMaterial = await getKeyMaterial(password);
-    const key = await deriveKey(keyMaterial, salt);
-
-    const decryptedContent = await crypto.subtle.decrypt(
-        {
-            name: "AES-GCM",
-            iv: iv
-        },
-        key,
-        ciphertext
-    );
-
-    const decoder = new TextDecoder();
-    return decoder.decode(decryptedContent);
+export async function decrypt(encrypted: string, password: string): Promise<string | undefined> {
+    try {
+        const data = Uint8Array.from(atob(encrypted), c => c.charCodeAt(0));
+    
+        const salt = data.slice(0, 16);
+        const iv = data.slice(16, 28);
+        const ciphertext = data.slice(28);
+    
+        const keyMaterial = await getKeyMaterial(password);
+        const key = await deriveKey(keyMaterial, salt);
+    
+        const decryptedContent = await crypto.subtle.decrypt(
+            {
+                name: "AES-GCM",
+                iv: iv
+            },
+            key,
+            ciphertext
+        );
+    
+        const decoder = new TextDecoder();
+        return decoder.decode(decryptedContent);
+    } catch (error) {
+        useErrorStore.getState().addError({
+            id: Math.random(),
+            message: "Decryption failed. Please check your password.",
+            type: "error",
+            timestamp: Date.now()
+        });
+        return undefined;
+    }
 }
 
 async function getKeyMaterial(password: string): Promise<CryptoKey> {
