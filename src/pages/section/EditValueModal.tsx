@@ -18,22 +18,15 @@ function EditValueModal (props: EditValueModalProps) {
 
   const setValues = useValuesStore((state) => state.setValues);
 
-  const valueName = useValueStore((state) => state.valueName);
-  const setValueName = useValueStore((state) => state.setValueName);
+  const [valueName, setValueName] = useState<string | undefined>();
   const handleValueName = (e: React.ChangeEvent<HTMLInputElement>) => {setValueName(e.target.value); setValueNameError(false);};
+  const [valueNameError, setValueNameError] = useState(false);
 
-  const valueNameError = useValueStore((state) => state.valueNameError);
-  const setValueNameError = useValueStore((state) => state.setValueNameError);
-  
-  const valueValue = useValueStore((state) => state.valueValue);
-  const setValueValue = useValueStore((state) => state.setValueValue);
+  const [valueValue, setValueValue] = useState<string | undefined>();
   const handleValueValueInput = (e: React.ChangeEvent<HTMLInputElement>) => setValueValue(e.target.value);
+  const [valueValueError, setValueValueError] = useState<boolean>(false);
 
-  const valueValueError = useValueStore((state) => state.valueValueError);
-  const setValueValueError = useValueStore((state) => state.setValueValueError);
-
-  const valueType = useValueStore((state) => state.valueType);
-  const setValueType = useValueStore((state) => state.setValueType);
+  const [valueType, setValueType] = useState<ValueTypes>();
   const handleValueType = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setValueType(e.target.value as ValueTypes);
     setValueValue(undefined);
@@ -57,7 +50,7 @@ function EditValueModal (props: EditValueModalProps) {
     if (props.open && props.value) {
       setIsLoadingExistingValue(true);
       setValueName(props.value.name);
-      setValueValue(props.value.value);
+      setValueValue(props.value.value as string | undefined);
       setValueType(props.value.type as ValueTypes);
       setValueExpirationDate(props.value.expirationDate ?? undefined);
       setValueNameError(false);
