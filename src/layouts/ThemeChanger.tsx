@@ -36,7 +36,7 @@ function ThemeChanger () {
     return (
         <label className="flex items-center gap-2">
             <input type="checkbox" value={theme} checked={theme === 'light'} className="toggle theme-controller hidden" onChange={handleChangeTheme} />
-            <span className="label-text">{theme === 'light' ? <MoonIcon className="w-5" /> : <SunIcon className="w-5" />}</span>
+            <button className="btn btn-circle btn-ghost">{theme === 'light' ? <MoonIcon className="w-5" /> : <SunIcon className="w-5" />}</button>
         </label>
 
     )
