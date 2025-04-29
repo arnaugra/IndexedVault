@@ -4,6 +4,7 @@ import HamburgerClose from "../svg/CloseIcon";
 import SideTree from "./SideTree";
 import { Link } from "wouter";
 import ThemeChanger from "./ThemeChanger";
+import EncryptModal from "./EncryptModal";
 
 function AppLayout({ children }: { children: React.ReactNode }) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -38,6 +39,10 @@ function AppLayout({ children }: { children: React.ReactNode }) {
                 <SideTree />
 
                 <div className="flex justify-evenly gap-4 p-4">
+                    
+                    <div className="tooltip flex items-center w-min" data-tip="Add Encryption Key">
+                        <EncryptModal />
+                    </div>
                     
                     <div className="tooltip flex items-center w-min" data-tip="Change Theme">
                         <ThemeChanger />
