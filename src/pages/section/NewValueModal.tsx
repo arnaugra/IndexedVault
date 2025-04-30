@@ -4,6 +4,8 @@ import useValueStore, { ValueTypes } from "../../stores/ValueStore";
 import useValuesStore from "../../stores/ValuesStore";
 import { useEffect, useState } from "react";
 import { Value } from "../../db/Value";
+import useEncryptStore from "../../stores/EncryptStore";
+import { encrypt } from "../../utils/encrypt";
 
 function ValueModal (props: {section_id: number}) {
   const [openValue, setOpenValue] = useState(false);
@@ -19,7 +21,7 @@ function ValueModal (props: {section_id: number}) {
   
   const valueValue = useValueStore((state) => state.valueValue);
   const setValueValue = useValueStore((state) => state.setValueValue);
-  const handleValueValueInput = (e: React.ChangeEvent<HTMLInputElement>) => setValueValue(e.target.value);
+  const handleValueValueInput = (e: React.ChangeEvent<HTMLInputElement>) => {setValueValue(e.target.value); setEncryptionError(false);};
 
   const valueValueError = useValueStore((state) => state.valueValueError);
   const setValueValueError = useValueStore((state) => state.setValueValueError);
@@ -39,6 +41,9 @@ function ValueModal (props: {section_id: number}) {
     setValueExpirationDate(e.target.value);
   }
 
+  const encryptionKey = useEncryptStore((state) => state.encryptionKey);
+  const [encryptionError, setEncryptionError] = useState(false);
+
   useEffect(() => {
     setValueName(undefined)
     setValueNameError(false)
@@ -50,19 +55,28 @@ function ValueModal (props: {section_id: number}) {
   , [openValue, setValueName, setValueValue, setValueType, setValueExpirationDate, setValueNameError, setValueValueError]);
 
   const createNewProject = async () => {
-    if (!valueName || !valueValue) {
+    if (!valueName || !valueValue || valueType === ValueTypes.PASSWORD && !encryptionKey) {
       if (!valueName) setValueNameError(true);
       if (!valueValue) setValueValueError(true);
+      if (valueType === ValueTypes.PASSWORD && !encryptionKey) setEncryptionError(true);
       return;
+    }
+
+    let finalValueValue = valueValue;
+    if (valueType === ValueTypes.PASSWORD) {
+      finalValueValue = await encrypt(finalValueValue as string, encryptionKey as string);
+      setValueValue(finalValueValue);
     }
 
     await Value.create({
       sectionId: props.section_id,
       name: valueName,
-      value: valueValue,
+      value: finalValueValue,
       type: valueType,
       expirationDate: valueExpirationDate,
     })
+
+
 
     setValueName(undefined)
     setValueNameError(false)
@@ -104,6 +118,8 @@ function ValueModal (props: {section_id: number}) {
                 <InputField label="Expiration date" name="expirationDate" type="date" value={valueExpirationDate} action={handleValueExpirationDate} optional />
               </div>
             </div>
+
+            {encryptionError && <p className="text-error">Encryption key is required for password values</p>}
 
             <button className="btn btn-sm btn-primary" onClick={createNewProject}>Edit</button>
             </div>

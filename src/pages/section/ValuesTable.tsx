@@ -14,6 +14,7 @@ import CalendarIcon from "../../svg/CalendarIcon";
 import useEncryptStore from "../../stores/EncryptStore";
 import { decrypt } from "../../utils/encrypt";
 import LockOpenIcon from "../../svg/LockOpenIcon";
+import NewNewValueModal from "./NewNewValueModal";
 
 function ValuesTable(props: {section_id: number}) {
 
@@ -128,8 +129,9 @@ function ValuesTable(props: {section_id: number}) {
                                                 <button className="btn btn-ghost btn-circle btn-xs text-error" onClick={() => setValueIdToDelete(value.id!)}>
                                                     <BinIcon className="w-4" />
                                                 </button>
-                                                {valueToEdit === value && (
-                                                    <EditValueModal key={index} open={true} section_id={props.section_id} value={value} onClose={() => setValueToEdit(null)} />
+                                                {valueToEdit === value && (<>
+                                                    <NewNewValueModal key={index} open={true} section_id={props.section_id} value={value} onClose={() => setValueToEdit(null)} />
+                                                </>
                                                 )}
 
                                                 {valueIdToDelete === value.id && (

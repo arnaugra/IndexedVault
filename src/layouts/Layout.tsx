@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import HamburgerOpen from "../svg/HamburgerIcon";
 import HamburgerClose from "../svg/CloseIcon";
 import SideTree from "./SideTree";
@@ -17,7 +17,9 @@ function AppLayout({ children }: { children: React.ReactNode }) {
     const encryptionKey = useEncryptStore((state) => state.encryptionKey);
     const loadEncryptionKey = useEncryptStore((state) => state.loadEncryptionKey);
 
-    loadEncryptionKey();
+    useEffect(() => {
+        loadEncryptionKey();
+    }, [loadEncryptionKey]);
 
     return (
         <div className="grid h-dvh
