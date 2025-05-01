@@ -2,7 +2,7 @@ import { Link, useLocation, useRoute } from "wouter";
 import useProjectStore from "../../stores/ProjectStore";
 import { Project } from "../../db/Project";
 import { useEffect, useState } from "react";
-import EditProjectModal from "../project/EditProjectModal";
+import ProjectModal from "./ProjectModal";
 import BinIcon from "../../svg/BinIcon";
 import useSectionsStore from "../../stores/SectionsStore";
 import NewSectionModal from "./NewSectionModal";
@@ -54,7 +54,7 @@ function ProjectPage() {
                 </div>
 
                 <div className="flex gap-2 shrink-0">
-                    <EditProjectModal project_id={project_id} />
+                    <ProjectModal project_id={project_id} />
                     <button className="btn btn-sm btn-error" onClick={() => setOpenConfirmationModal(!openConfirmationModal)}><BinIcon className="w-4" /> <span className="hidden @md/layout:block">Delete project</span></button>
                     <ConfirmModalComponent open={openConfirmationModal} onConfirm={deleteProject} onCancel={() => setOpenConfirmationModal(false)}>
                         <p>You are about to delete this project.</p>
