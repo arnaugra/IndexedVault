@@ -31,13 +31,13 @@ function ThemeChanger () {
         if (initialized.current) return;
         initialized.current = true;
         fetchTheme();
-    }, [initialized]);
+    }, []);
 
     return (
-        <label className="flex items-center gap-2">
-            <input type="checkbox" value={theme} checked={theme === 'light'} className="toggle theme-controller hidden" onChange={handleChangeTheme} />
-            <button className="btn btn-circle btn-ghost">{theme === 'light' ? <MoonIcon className="w-5" /> : <SunIcon className="w-5" />}</button>
-        </label>
+        <>
+            <input type="checkbox" value={theme} checked={theme === 'light'} className="theme-controller hidden" />
+            <button className="btn btn-circle btn-ghost" onClick={handleChangeTheme}>{theme === 'light' ? <MoonIcon className="w-5" /> : <SunIcon className="w-5" />}</button>
+        </>
 
     )
 }
