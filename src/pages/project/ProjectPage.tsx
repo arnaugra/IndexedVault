@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import ProjectModal from "./ProjectModal";
 import BinIcon from "../../svg/BinIcon";
 import useSectionsStore from "../../stores/SectionsStore";
-import NewSectionModal from "./NewSectionModal";
+import SectionModal from "../section/SectionModal";
 import ConfirmModalComponent from "../../components/ConfirmModalComponent";
 import BreadcrumbsComponent from "../../components/BreadcrumbsComponent";
 
@@ -66,7 +66,7 @@ function ProjectPage() {
             {projectDescription && <p className="text-gray-600 mt-1 whitespace-pre-line">{projectDescription}</p>}
             <div className="divider m-0"></div>
             <span>
-                <NewSectionModal project_id={project_id} />
+                <SectionModal project_id={project_id} />
             </span>
         </article>
         <article className="content">

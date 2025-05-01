@@ -3,7 +3,7 @@ import { Section } from "../../db/Section";
 import { useEffect, useState } from "react";
 import useValuesStore from "../../stores/ValuesStore";
 import useNewSectionStore from "../../stores/SectionStore";
-import EditSectionModal from "./EditSectionModal";
+import SectionModal from "./SectionModal";
 import ConfirmModalComponent from "../../components/ConfirmModalComponent";
 import BinIcon from "../../svg/BinIcon";
 import NewValueModal from "./NewValueModal";
@@ -55,7 +55,7 @@ function SectionPage () {
                 </div>
 
                 <div className="flex gap-2 shrink-0">
-                    <EditSectionModal section_id={section_id} />
+                    <SectionModal section_id={section_id} />
                     <button className="btn btn-sm btn-error" onClick={() => setOpenConfirmationModal(!openConfirmationModal)}><BinIcon className="w-4" /> <span className="hidden @md/layout:block">Delete project</span></button>
                     <ConfirmModalComponent open={openConfirmationModal} onConfirm={deleteProject} onCancel={() => setOpenConfirmationModal(false)}>
                         <p>You are about to delete this section.</p>
