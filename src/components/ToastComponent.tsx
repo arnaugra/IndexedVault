@@ -1,11 +1,15 @@
-import useErrorStore, { ErrorType } from "../stores/ErrorStore";
+import useErrorStore, { ErrorsType, ErrorsTypes } from "../stores/ErrorStore";
+import CloseIcon from "../svg/CloseIcon";
+import ToastErrorIcon from "../svg/ToastErrorIcon";
+import ToastInfoIcon from "../svg/ToastInfoIcon";
+import ToastWarningIcon from "../svg/ToastWarningIcon";
 
 function ToastCompoennt() {
     const errors = useErrorStore((state) => state.errors);
 
     return (
         <>
-            <div className="absolute bottom-10 right-10 flex flex-col gap-4 z-50">
+            <div className="absolute max-md:left-3 bottom-3 md:bottom-10 right-3 md:right-10 flex flex-col items-end gap-3 z-50">
                 {errors.map((error) => (
                     <ToastItem key={error.id} error={error} />
                 ))}
@@ -14,25 +18,26 @@ function ToastCompoennt() {
     );
 }
 
-function ToastItem({error}: {error: ErrorType}) {
+function ToastItem({error}: {error: ErrorsType}) {
 
     const removeError = useErrorStore((state) => state.removeError);
     const { message, type, timestamp, id } = error;
 
-    const maxToastTime = 1000 * 1; // 10 seconds
+    const maxToastTime = 1000 * 10; // 10 seconds
 
     setTimeout(() => {
-        
         removeError(id);
     }, (timestamp + maxToastTime) - timestamp);
 
     return (
-        <div role="alert" className="alert">
-            {type}
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="stroke-info h-6 w-6 shrink-0">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
+        <div role="alert" className={`alert alert-${type} w-full md:max-w-96 md:w-auto`}>
+            {{
+                [ErrorsTypes.info]: <ToastInfoIcon className="w-6" />,
+                [ErrorsTypes.warning]: <ToastWarningIcon className="w-6" />,
+                [ErrorsTypes.error]: <ToastErrorIcon className="w-6" />,
+            }[type]}
             <span>{message}</span>
+            <button className="btn btn-ghost btn-circle btn-xs" onClick={() => removeError(id)}><CloseIcon /></button>
         </div>
     );
 }
