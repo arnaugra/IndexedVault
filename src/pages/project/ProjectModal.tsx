@@ -82,11 +82,11 @@ function ProjectModal (props: {project_id?: number}) {
         <>
             <button className="btn btn-sm" onClick={()=> setOpenNewProject(true)}>
                 <EditIcon className="w-4" />
-                <span className="hidden @md/layout:block">Edit project</span>
+                <span className="hidden @md/layout:block">{edit ? "Edit" : "New"} project</span>
             </button>
             <ModalComponent open={openNewProject} onClose={() => setOpenNewProject(false)}>
                 <div className="flex flex-col gap-4">
-                    <h2>Create a new project</h2>
+                    <h2>{edit ? "Edit" : "Create New"} Project</h2>
 
                     <InputField label="Name" name="name" value={LocalProject.name} error={LocalProject.nameError} action={handleProjectInput} />
                     <TextareaField label="Description" name="description" value={LocalProject.description} action={handleProjectInput} optional />
