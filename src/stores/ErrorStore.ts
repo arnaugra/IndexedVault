@@ -1,34 +1,30 @@
 import { create } from "zustand";
 
-type ErrorType = {
+enum ErrorsTypes {
+    info = "info",
+    warning = "warning",
+    error = "error",
+}
+
+type ErrorsType = {
     id: number;
     message: string;
-    type: "error" | "warning" | "info";
+    type: ErrorsTypes;
     timestamp: number;
 };
 
 interface ErrorStore {
-    errors: ErrorType[];
-    addError: (error: ErrorType) => void;
+    errors: ErrorsType[];
+    addError: (error: ErrorsType) => void;
     removeError: (index: number) => void;
-    clearErrors: () => void;
-    setError: (error: ErrorType) => void;
-    setErrors: (errors: ErrorType[]) => void;
 };
 
 const useErrorStore = create<ErrorStore>((set) => ({
-    errors: [{
-        id: 0,
-        message: "Welcome to the app!",
-        type: "info",
-        timestamp: Date.now()
-    }],
+    errors: [],
     addError: (error) => set((state) => ({ errors: [...state.errors, error] })),
-    removeError: (index) => set((state) => ({ errors: state.errors.filter((error) => error.id !== index) })),
-    clearErrors: () => set({ errors: [] }),
-    setError: (error) => set({ errors: [error] }),
-    setErrors: (errors) => set({ errors })
+    removeError: (id) => set((state) => ({ errors: state.errors.filter((error) => error.id !== id) })),
 }));
 
 export default useErrorStore;
-export type { ErrorType };
+export type { ErrorsType };
+export { ErrorsTypes };
