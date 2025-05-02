@@ -81,8 +81,6 @@ function ValueModal(props: {section_id: number}) {
         }
         
         if (valueIdToEdit) {
-            console.log("Editing value", valueIdToEdit, finalValue);
-            
             await Value.update(valueIdToEdit!, {
                 name: localValue.name,
                 value: finalValue,
@@ -90,8 +88,6 @@ function ValueModal(props: {section_id: number}) {
                 expirationDate: localValue.expirationDate,
             });
         } else {
-            console.log("Creating new value", props.section_id, finalValue);
-
             await Value.create({
                 sectionId: props.section_id,
                 name: localValue.name,
