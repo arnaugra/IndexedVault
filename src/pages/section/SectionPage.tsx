@@ -6,8 +6,8 @@ import useNewSectionStore from "../../stores/SectionStore";
 import SectionModal from "./SectionModal";
 import ConfirmModalComponent from "../../components/ConfirmModalComponent";
 import BinIcon from "../../svg/BinIcon";
-import NewValueModal from "./NewValueModal";
-import ValuesTable from "./ValuesTable";
+import ValueModal from "../value/ValueModal";
+import ValuesTable from "../value/ValuesTable";
 import BreadcrumbsComponent from "../../components/BreadcrumbsComponent";
 
 function SectionPage () {
@@ -67,7 +67,7 @@ function SectionPage () {
             {sectionDescription && <p className="text-gray-600 mt-2 whitespace-pre-line">{sectionDescription}</p>}
             <div className="divider m-0"></div>
             <span>
-                <NewValueModal section_id={section_id} />
+                <ValueModal section_id={section_id} />
             </span>
         </article>
         <article>
