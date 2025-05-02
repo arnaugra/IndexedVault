@@ -34,7 +34,7 @@ function ThemeChanger () {
 
     return (
         <>
-            <input type="checkbox" value={theme} checked={theme === 'light'} className="theme-controller hidden" />
+            <input type="checkbox" value={theme} checked={theme === 'light'} className="theme-controller hidden" onChange={() => {}}/> {/* Using `onchange` to prevent an error log */}
             <button className="btn btn-circle btn-ghost" onClick={handleChangeTheme}>{theme === 'light' ? <MoonIcon className="w-5" /> : <SunIcon className="w-5" />}</button>
         </>
 
