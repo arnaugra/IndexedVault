@@ -20,8 +20,7 @@ function ThemeChanger () {
             setTheme(currentTheme.value as Themes);
         } else {
             const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            console.log(prefersDark);
-            
+
             const newTheme = prefersDark ? 'dark' : 'light';
             setTheme(newTheme);
             await Config.create({ name: 'theme', value: newTheme });
