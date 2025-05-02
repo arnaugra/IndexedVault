@@ -48,14 +48,11 @@ textarea {
   field-sizing: content;
 }
 
-:has(> .active-link-menu-project) {
+:has(> .active-link-menu) {
   @apply text-base-content/60 bg-base-content/5;
 }
-.active-link-menu-project {
+.active-link-menu {
   @apply pointer-events-none;
-}
-.active-link-menu-section {
-  @apply pointer-events-none text-base-content/60 bg-base-content/5;
 }
 .active-link-breadcrumb {
   @apply pointer-events-none text-base-content/60;
