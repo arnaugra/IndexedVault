@@ -40,6 +40,8 @@ function BreadcrumbsComponent(props: BreadcrumbsComponentProps) {
                 } else {
                     console.error("Section not found");
                 }
+            } else {
+                setSectionName(undefined);
             }
         };
 

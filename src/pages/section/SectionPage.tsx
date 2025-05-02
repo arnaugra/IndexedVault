@@ -64,7 +64,7 @@ function SectionPage () {
                     </ConfirmModalComponent>
                 </div>
             </div>
-            {sectionDescription && <p className="text-gray-600 mt-2 whitespace-pre-line">{sectionDescription}</p>}
+            {sectionDescription && <p className="text-gray-600 mt-1 whitespace-pre-line">{sectionDescription}</p>}
             <div className="divider m-0"></div>
             <span>
                 <ValueModal section_id={section_id} />
