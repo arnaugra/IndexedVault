@@ -83,7 +83,7 @@ function SectionModal (props: {project_id?: number, section_id?: number}) {
         <>
             <button className="btn btn-sm" onClick={()=> setOpenNewSection(true)}>
                 <EditIcon className="w-4" />
-                <span className="hidden @md/layout:block">{edit ? "Edit" : "New"} section v.2</span>
+                <span className="hidden @md/layout:block">{edit ? "Edit" : "New"} section</span>
             </button>
             <ModalComponent open={openNewSection} onClose={() => setOpenNewSection(false)}>
                 <div className="flex flex-col gap-4">
