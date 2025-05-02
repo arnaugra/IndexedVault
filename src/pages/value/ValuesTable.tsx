@@ -35,7 +35,6 @@ function ValuesTable(props: {section_id: number}) {
 
     return (
         <>
-        {encryptionKey}
             {
                 values.length === 0 
                     ?   <p className="text-gray-600">No values found.</p>
@@ -103,7 +102,7 @@ function ValuesTable(props: {section_id: number}) {
                                             </td>
                                             <td className="whitespace-nowrap">
                                                 <div className="flex gap-2 items-center">
-                                                    {value.expirationDate ? (() => {
+                                                    {value.expirationDate && (() => {
                                                         const now = new Date();
                                                         const expiration = new Date(value.expirationDate);
                                                         const diffMs = expiration.getTime() - now.getTime();
@@ -117,7 +116,7 @@ function ValuesTable(props: {section_id: number}) {
                                                                 <relative-time datetime={value.expirationDate} />
                                                             </div>
                                                         )
-                                                    })() : <span className="italic text-gray-500">No expiration date</span>}
+                                                    })()}
                                                 </div>
                                             </td>
                                             <td className="flex gap-1 items-center">

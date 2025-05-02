@@ -107,7 +107,7 @@ function ValueModal(props: {section_id: number}) {
         <>
             <button className="btn btn-sm" onClick={() => setOpenNewValue(true)}>
                 <EditIcon className="w-4" />
-                New value v.2
+                New value
             </button>
             <ModalComponent open={openNewValue} onClose={closeValueModal}>
                 <div className="flex flex-col gap-4">

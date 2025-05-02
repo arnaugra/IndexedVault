@@ -1,4 +1,4 @@
-import useErrorStore from "../stores/ErrorStore";
+import useErrorStore, { ErrorsTypes } from "../stores/ErrorStore";
 
 export async function encrypt(text: string, password: string): Promise<string> {
     const encoder = new TextEncoder();
@@ -50,10 +50,11 @@ export async function decrypt(encrypted: string, password: string): Promise<stri
         const decoder = new TextDecoder();
         return decoder.decode(decryptedContent);
     } catch (error) {
-        useErrorStore.getState().addError({
+        const addError = useErrorStore.getState().addError;
+        addError({
             id: Math.random(),
             message: "Decryption failed. Please check your password.",
-            type: "error",
+            type: ErrorsTypes.error,
             timestamp: Date.now()
         });
         return undefined;
