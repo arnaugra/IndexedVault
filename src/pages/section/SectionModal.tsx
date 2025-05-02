@@ -69,11 +69,7 @@ function SectionModal (props: {project_id?: number, section_id?: number}) {
             });
         }
 
-        setLocalSection({
-            name: "",
-            nameError: false,
-            description: "",
-        });
+        setLocalSection(sectionBase);
         setOpenNewSection(false);
         setSections(props.project_id!);
 
