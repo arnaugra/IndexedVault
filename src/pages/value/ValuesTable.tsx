@@ -35,7 +35,6 @@ function ValuesTable(props: {section_id: number}) {
 
     return (
         <>
-        {encryptionKey}
             {
                 values.length === 0 
                     ?   <p className="text-gray-600">No values found.</p>
