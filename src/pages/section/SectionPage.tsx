@@ -3,11 +3,11 @@ import { Section } from "../../db/Section";
 import { useEffect, useState } from "react";
 import useValuesStore from "../../stores/ValuesStore";
 import useNewSectionStore from "../../stores/SectionStore";
-import EditSectionModal from "./EditSectionModal";
+import SectionModal from "./SectionModal";
 import ConfirmModalComponent from "../../components/ConfirmModalComponent";
 import BinIcon from "../../svg/BinIcon";
-import NewValueModal from "./NewValueModal";
-import ValuesTable from "./ValuesTable";
+import ValueModal from "../value/ValueModal";
+import ValuesTable from "../value/ValuesTable";
 import BreadcrumbsComponent from "../../components/BreadcrumbsComponent";
 
 function SectionPage () {
@@ -55,7 +55,7 @@ function SectionPage () {
                 </div>
 
                 <div className="flex gap-2 shrink-0">
-                    <EditSectionModal section_id={section_id} />
+                    <SectionModal section_id={section_id} />
                     <button className="btn btn-sm btn-error" onClick={() => setOpenConfirmationModal(!openConfirmationModal)}><BinIcon className="w-4" /> <span className="hidden @md/layout:block">Delete project</span></button>
                     <ConfirmModalComponent open={openConfirmationModal} onConfirm={deleteProject} onCancel={() => setOpenConfirmationModal(false)}>
                         <p>You are about to delete this section.</p>
@@ -67,7 +67,7 @@ function SectionPage () {
             {sectionDescription && <p className="text-gray-600 mt-2 whitespace-pre-line">{sectionDescription}</p>}
             <div className="divider m-0"></div>
             <span>
-                <NewValueModal section_id={section_id} />
+                <ValueModal section_id={section_id} />
             </span>
         </article>
         <article>

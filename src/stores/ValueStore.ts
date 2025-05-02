@@ -1,6 +1,10 @@
 import { create } from 'zustand';
 
 interface ValueStore {
+    openNewValue: boolean;
+    setOpenNewValue: (open: boolean) => void;
+    valueIdToEdit?: number;
+    setValueIdToEdit: (id: number | undefined) => void;
     valueName?: string;
     valueNameError: boolean;
     valueValue?: string | boolean;
@@ -24,6 +28,10 @@ enum ValueTypes {
 type ValueType = keyof typeof ValueTypes;
 
 const useValueStore = create<ValueStore>((set) => ({
+    openNewValue: false,
+    setOpenNewValue: (open) => set({ openNewValue: open }),
+    valueIdToEdit: undefined,
+    setValueIdToEdit: (id) => set({ valueIdToEdit: id }),
     valueName: undefined,
     valueNameError: false,
     valueValue: undefined,

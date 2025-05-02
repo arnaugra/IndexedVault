@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 // import Datastats from "../../components/DataStats";
 import { Link } from "wouter";
-import NewProjectModal from "./NewProjectModal";
+import ProjectModal from "../project/ProjectModal";
 import useProjectsStore from "../../stores/ProjectsStore";
 
 function HomePage () {
@@ -18,7 +18,7 @@ function HomePage () {
   return (
     <section id="page">
       <article className="head-c">
-        <NewProjectModal />
+        <ProjectModal />
         {/* TODO: make stats [num projects, num sections, num value] */}
         {/* <Datastats /> */}
       </article>

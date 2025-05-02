@@ -18,7 +18,7 @@ export interface ValueI {
     sectionId: number;
     name: string;
     type: string;
-    value: string | boolean;
+    value: string;
     expirationDate?: string;
 }
 

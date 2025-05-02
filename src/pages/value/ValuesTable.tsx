@@ -2,11 +2,9 @@ import { useState } from "react";
 import ConfirmModalComponent from "../../components/ConfirmModalComponent";
 import { Value } from "../../db/Value";
 import useValuesStore from "../../stores/ValuesStore"
-import { ValueTypes } from "../../stores/ValueStore";
+import useValueStore, { ValueTypes } from "../../stores/ValueStore";
 import BinIcon from "../../svg/BinIcon";
 import EditIcon from "../../svg/EditIcon";
-import { ValueI } from "../../db/interfaces";
-import EditValueModal from "./EditValueModal";
 import CopyIcon from "../../svg/CopyIcon";
 import TextIcon from "../../svg/TextIcon";
 import PasswordIcon from "../../svg/PasswordIcon";
@@ -14,14 +12,14 @@ import CalendarIcon from "../../svg/CalendarIcon";
 import useEncryptStore from "../../stores/EncryptStore";
 import { decrypt } from "../../utils/encrypt";
 import LockOpenIcon from "../../svg/LockOpenIcon";
-import NewNewValueModal from "./NewNewValueModal";
 
 function ValuesTable(props: {section_id: number}) {
 
     const values = useValuesStore((state) => state.values);
     const setValues = useValuesStore((state) => state.setValues);
 
-    const [valueToEdit, setValueToEdit] = useState<ValueI | null>(null);
+    const setValueIdToEdit = useValueStore((state) => state.setValueIdToEdit);
+    const setOpenNewValue = useValueStore((state) => state.setOpenNewValue);
 
     const [valueIdToDelete, setValueIdToDelete] = useState<number | null>(null);
 
@@ -123,17 +121,12 @@ function ValuesTable(props: {section_id: number}) {
                                                 </div>
                                             </td>
                                             <td className="flex gap-1 items-center">
-                                                <button className="btn btn-ghost btn-circle btn-xs" onClick={() => setValueToEdit(value)}>
+                                                <button className="btn btn-ghost btn-circle btn-xs" onClick={() => {setValueIdToEdit(value.id); setOpenNewValue(true)}}>
                                                     <EditIcon className="w-4" />
                                                 </button>
                                                 <button className="btn btn-ghost btn-circle btn-xs text-error" onClick={() => setValueIdToDelete(value.id!)}>
                                                     <BinIcon className="w-4" />
                                                 </button>
-                                                {valueToEdit === value && (<>
-                                                    <NewNewValueModal key={index} open={true} section_id={props.section_id} value={value} onClose={() => setValueToEdit(null)} />
-                                                </>
-                                                )}
-
                                                 {valueIdToDelete === value.id && (
                                                     <ConfirmModalComponent key={index} open={true} onConfirm={() => deleteValue(value.id as number)} onCancel={() => {setValueIdToDelete(null)}}>
                                                         <p>You are about to delete this value.</p>
