@@ -54,14 +54,14 @@ function BreadcrumbsComponent(props: BreadcrumbsComponentProps) {
     <div className="flex justify-start items-center gap-1 w-full">
 
         <Link href={`/project/${project_id}`} className={(active) => `${active ? "active-link-breadcrumb" : ""} ${sectionName ? "max-w-[25%]" : ""} flex items-center gap-1`}>
-            <FolderIcon className="w-4 shrink-0" />
+            <FolderIcon className={`${sectionName ? "w-4" : "w-5"} mt-0.5 shrink-0`} />
             <p className={`line-clamp-1 @max-xl/layout:hidden ${sectionName ? "text-sm" : "text-lg"}`}>{projectName}</p>
         </Link>
 
         {section_id && <>
-            <BreadcrumbSeparatorIcon />
+            <BreadcrumbSeparatorIcon className="active-link-breadcrumb w-5" />
             <Link href={`/project/${project_id}/section/${section_id}`} className={(active) => `${active ? "active-link-breadcrumb" : ""} flex items-center gap-1`}>
-                <FileIcon className="w-4 shrink-0" />
+                <FileIcon className="w-5 shrink-0" />
                 <p className="line-clamp-1 text-lg">{sectionName}</p>
             </Link>
         </>}
