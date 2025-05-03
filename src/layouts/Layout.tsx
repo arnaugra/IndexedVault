@@ -37,7 +37,7 @@ function AppLayout({ children }: { children: React.ReactNode }) {
                 md:col-start-1 md:row-start-1 md:row-end-2 md:col-end-2
                 xl:col-span-2 xl:row-start-1 xl:row-end-2 xl:col-start-1 xl:col-end-2
             ">
-                <button onClick={() => setSidebarOpen(!sidebarOpen)} className="xl:hidden">
+                <button onClick={() => setSidebarOpen(!sidebarOpen)} className="xl:hidden cursor-pointer">
                     {sidebarOpen ? <HamburgerClose stroke strokeWidth="2" /> : <HamburgerOpen stroke strokeWidth="2" />}
                 </button>
                 <Link href="/">
