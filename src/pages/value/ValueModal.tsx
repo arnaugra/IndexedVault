@@ -5,7 +5,7 @@ import useEncryptStore from "../../stores/EncryptStore";
 import { Value } from "../../db/Value";
 import ModalComponent from "../../components/ModalComponent";
 import InputField from "../../components/InputField";
-import { encrypt } from "../../utils/encrypt";
+import { decrypt, encrypt } from "../../utils/encrypt";
 import EditIcon from "../../svg/EditIcon";
 
 const valueBase = {
@@ -30,6 +30,14 @@ function ValueModal(props: {section_id: number}) {
     const setValues = useValuesStore((state) => state.setValues);
     const encryptionKey = useEncryptStore((state) => state.encryptionKey);
 
+    const inputValue = async (value: string, type: ValueTypes) => {
+        if (type === ValueTypes.PASSWORD && encryptionKey) {
+            const decryptedValue = await decrypt(value, encryptionKey);
+            return decryptedValue ?? "";
+        }
+        return value;
+    }
+
     useEffect(() => {
         if (!openNewValue) {
             setLocalValue(valueBase);
@@ -37,12 +45,12 @@ function ValueModal(props: {section_id: number}) {
         }
         const init = async () => {
             if (valueIdToEdit) {
-                await Value.getById(valueIdToEdit!).then((value) => {
-                    
+                await Value.getById(valueIdToEdit!).then(async (value) => {
+                    const finalValue = await inputValue(value?.value as string, value?.type as ValueTypes);
                     setLocalValue({
                         name: value?.name ?? "",
                         nameError: false,
-                        value: value?.value ?? "",
+                        value: finalValue,
                         valueError: false,
                         type: value?.type as ValueTypes ?? ValueTypes.TEXT,
                         expirationDate: value?.expirationDate ?? undefined,
