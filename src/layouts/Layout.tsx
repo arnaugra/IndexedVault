@@ -9,6 +9,7 @@ import ToastComponent from "../components/ToastComponent";
 import useEncryptStore from "../stores/EncryptStore";
 import LockCloseIcon from "../svg/LockCloseIcon";
 import LockOpenIcon from "../svg/LockOpenIcon";
+import GitHubIssueIcon from "../svg/GitHubIssueIcon";
 
 function AppLayout({ children }: { children: React.ReactNode }) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -62,7 +63,13 @@ function AppLayout({ children }: { children: React.ReactNode }) {
                             {encryptionKey ? <LockCloseIcon className="w-5 text-success" /> : <LockOpenIcon className="w-5 text-error" />}
                         </button>
                     </div>
-                    
+
+                    <div className="tooltip flex items-center w-min" data-tip="Create a GitHub Issue">
+                        <button className="btn btn-circle btn-ghost" onClick={() => open("https://github.com/arnaugra/IndexedVault/issues/new", "_blank", "noopener noreferrer")}>
+                            <GitHubIssueIcon className="w-5" />
+                        </button>
+                    </div>
+
                     <div className="tooltip flex items-center w-min" data-tip="Change Theme">
                         <ThemeChanger />
                     </div>
