@@ -1,5 +1,6 @@
 import { useLocation, useRoute } from "wouter";
 import { Section } from "../../db/Section";
+import { Project } from "../../db/Project";
 import { useEffect, useState } from "react";
 import useValuesStore from "../../stores/ValuesStore";
 import useNewSectionStore from "../../stores/SectionStore";
@@ -25,11 +26,13 @@ function SectionPage () {
 
     useEffect(() => {
         const fetchSection = async () => {
+            const pageProject = await Project.getById(project_id);
             const pageSection = await Section.getById(section_id);
-            if (pageSection) {
+            if (pageProject && pageSection) {
                 setSectionName(pageSection.name);
                 setSectionDescription(pageSection.description);
-                
+                document.title = `IndexedVault | ${pageProject.name} / ${pageSection.name}`;
+
             } else {
                 navigate("/404");
             }

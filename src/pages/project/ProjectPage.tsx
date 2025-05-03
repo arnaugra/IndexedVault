@@ -29,6 +29,8 @@ function ProjectPage() {
             if (pageProject) {
                 setProjectName(pageProject.name);
                 setProjectDescription(pageProject.description);
+                document.title = `IndexedVault | ${pageProject.name}`;
+
             } else {
                 navigate("/404");
             }

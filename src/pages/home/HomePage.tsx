@@ -12,6 +12,7 @@ function HomePage () {
   // init
   useEffect(() => {
     setProjects();
+    document.title = "IndexedVault";
   }
   , [setProjects]);
 
