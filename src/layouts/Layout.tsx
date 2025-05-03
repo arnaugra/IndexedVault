@@ -41,7 +41,7 @@ function AppLayout({ children }: { children: React.ReactNode }) {
                     {sidebarOpen ? <HamburgerClose stroke strokeWidth="2" /> : <HamburgerOpen stroke strokeWidth="2" />}
                 </button>
                 <Link href="/">
-                    <h1>Indexed Vault</h1>
+                    <h1>IndexedVault</h1>
                 </Link>
             </header>
 
