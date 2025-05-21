@@ -15,6 +15,30 @@ export class DB extends Dexie {
             values: "++id, sectionId, name, type, value, fechaExpiracion, [sectionId+name]",
             config: "++id, name, value",
         });
+
+        this.version(2).stores({
+            projects: "++id, name, description, order",
+            sections: "++id, projectId, name, description, order, [projectId+name]",
+            values: "++id, sectionId, name, type, value, fechaExpiracion, order, [sectionId+name]",
+        }).upgrade(async() => {
+            const projects = await this.projects.toArray();
+            for (let i = 0; i < projects.length; i++) {
+                projects[i].order = i;
+            }
+            await this.projects.bulkPut(projects);
+            
+            const sections = await this.sections.toArray();
+            for (let i = 0; i < sections.length; i++) {
+                sections[i].order = i;
+            }
+            await this.sections.bulkPut(sections);
+
+            const values = await this.values.toArray();
+            for (let i = 0; i < values.length; i++) {
+                values[i].order = i;
+            }
+            await this.values.bulkPut(values);
+        })
     }
 }
   

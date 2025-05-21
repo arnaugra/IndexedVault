@@ -9,6 +9,15 @@
   scrollbar-color: inherit transparent;
 }
 
+.dragging {
+  opacity: 0.5;
+  border: 2px dashed var(--color-info);
+}
+.not-dragging {
+  opacity: 1;
+  border: 2px dashed var(--color-info-content);
+}
+
 .btn {
   @apply brightness-100 hover:brightness-90 shadow-none;
 }

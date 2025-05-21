@@ -3,6 +3,7 @@ export interface ProjectI {
     name: string;
     description?: string;
     sections?: SectionI[];
+    order: number;
 }
 
 export interface SectionI {
@@ -11,6 +12,7 @@ export interface SectionI {
     name: string;
     description?: string;
     values?: ValueI[];
+    order: number;
 }
 
 export interface ValueI {
@@ -20,6 +22,7 @@ export interface ValueI {
     type: string;
     value: string;
     expirationDate?: string;
+    order: number;
 }
 
 export interface ConfigI {
