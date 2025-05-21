@@ -51,13 +51,13 @@ function AppLayout({ children }: { children: React.ReactNode }) {
                 p-4
                 ${sidebarOpen ? "flex flex-col justify-between" : "hidden"}
                 h-[calc(100vh-4rem)]
-                flex flex-col justify-between
+                flex flex-col justify-between gap-4
                 row-start-2 row-end-3 col-start-1 col-end-2
                 xl:flex xl:row-start-2 xl:row-end-auto xl:col-start-1
             `}>
                 <SideTree />
 
-                <div className="flex justify-evenly gap-4 p-4">
+                <div className="flex justify-evenly gap-4 px-4">
                     
                     <div className="tooltip flex items-center w-min" data-tip="Add Encryption Key">
                         <button className="btn btn-circle btn-ghost" onClick={() => setOpenModalEncrypt(true)}>

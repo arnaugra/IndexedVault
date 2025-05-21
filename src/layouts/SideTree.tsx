@@ -42,7 +42,7 @@ function SideTree() {
     ]);
 
   return (
-    <ul className="menu w-full overflow-y-auto">
+    <ul className="menu w-full overflow-y-auto pr-0">
         <li>
         {tree.length === 0
             ?   <span className="flex gap-2 items-center pointer-events-none italic">
