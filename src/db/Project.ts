@@ -23,6 +23,7 @@ export class Project extends Model<ProjectI, "id"> {
 
     static async getAll(includeRelations: boolean = false) {
         const projects = await db.projects.toArray();
+        projects.sort((a, b) => (a.order) - (b.order));
         if (includeRelations) {
             for (const project of projects) {
             project.sections = await Section.getAllForProject(project.id!, includeRelations);
