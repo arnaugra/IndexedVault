@@ -78,7 +78,7 @@ function ProjectPage() {
                 : sections.map((section) => (
                     <Link href={`/project/${project_id}/section/${section.id}`} key={section.id} className="card bg-base-200 border-base-300 rounded-box w-full h-full border p-4">
                         <h2 className="line-clamp-1">{section.name}</h2>
-                        {section.description && <p className="text-gray-600 line-clamp-2">{section.description}</p>}
+                        {section.description && <p className="text-gray-600 whitespace-pre-line line-clamp-2">{section.description}</p>}
                     </Link>
                 ))
             }
