@@ -5,6 +5,8 @@
 
 * {
   outline: none;
+  scrollbar-width: thin;
+  scrollbar-color: inherit transparent;
 }
 
 .btn {

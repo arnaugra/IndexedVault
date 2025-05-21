@@ -50,6 +50,7 @@ function AppLayout({ children }: { children: React.ReactNode }) {
             <aside className={`
                 p-4
                 ${sidebarOpen ? "flex flex-col justify-between" : "hidden"}
+                h-[calc(100vh-4rem)]
                 flex flex-col justify-between
                 row-start-2 row-end-3 col-start-1 col-end-2
                 xl:flex xl:row-start-2 xl:row-end-auto xl:col-start-1
