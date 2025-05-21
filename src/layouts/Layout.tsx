@@ -83,8 +83,8 @@ function AppLayout({ children }: { children: React.ReactNode }) {
                     ? "md:col-start-2 md:row-start-1 hidden md:block border-l border-gray-600" 
                     : "md:col-start-1 md:row-start-2 block"
                 }
-                md:col-end-3 md:row-end-3
-                xl:col-start-2 xl:row-start-1
+                md:col-end-3 md:row-end-3 
+                xl:col-start-2 xl:row-start-1 xl:border-l xl:border-gray-600
                 @container/layout
             `}>
                 {children}
