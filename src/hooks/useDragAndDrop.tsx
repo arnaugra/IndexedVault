@@ -5,6 +5,7 @@ type withId = { id?: string | number };
 export type UseDragAndDropReturn<T extends withId> = {
     draggedItem: T | null;
     onDragStart: (item: T) => React.DragEventHandler;
+    onDragEnd: React.DragEventHandler;
     onDragOver: React.DragEventHandler;
     onDrop: (targetItem: T, onDropItem: (from: T, to: T) => void) => React.DragEventHandler;
     reorderItems: (items: T[], from: T, to: T) => T[];
@@ -15,6 +16,10 @@ export function useDragAndDrop<T extends withId>(): UseDragAndDropReturn<T> {
 
     const onDragStart = (item: T) => () => {
         setDraggedItem(item);
+    };
+
+    const onDragEnd: React.DragEventHandler = () => {
+        setDraggedItem(null);
     };
 
     const onDragOver: React.DragEventHandler = (e) => {
@@ -40,5 +45,5 @@ export function useDragAndDrop<T extends withId>(): UseDragAndDropReturn<T> {
         }));
     }
 
-    return { draggedItem, onDragStart, onDragOver, onDrop, reorderItems };
+    return { draggedItem, onDragStart, onDragEnd, onDragOver, onDrop, reorderItems };
 }
