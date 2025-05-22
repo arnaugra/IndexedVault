@@ -57,7 +57,7 @@ function ValuesTable(props: {section_id: number}) {
     };
     const colwidths = [
         "flex w-3/12 px-4 py-3",
-        "flex w-9/12 px-4 py-3",
+        "flex w-7/12 px-4 py-3",
         "flex w-2/12 px-4 py-3",
         "flex w-1/12 px-4 py-3"
     ];
