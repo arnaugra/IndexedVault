@@ -23,6 +23,7 @@ export class Section extends Model<SectionI, "id"> {
   
     static async getAllForProject(projectId: number, includeRelations: boolean = false) {
       const sections = await db.sections.where("projectId").equals(projectId).toArray();
+      sections.sort((a, b) => (a.order) - (b.order));
       if (includeRelations) {
         for (const section of sections) {
           section.values = await Value.getAllForSection(section.id!);
