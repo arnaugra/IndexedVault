@@ -73,7 +73,7 @@ function ValuesTable(props: {section_id: number}) {
                             {values.map((value, index) => (
                                 <section role="row" data-section={`value-${value.id}`} key={value.id} className={`flex text-sm ${draggedItem ? isDraging(value.id as number) : ''} not-last:border-b not-last:border-base-content/5`}
                                 onDragEnd={ onDragEnd }
-                                onDragOver={ onDragOver }
+                                onDragOver={ onDragOver(value) }
                                 onDrop={ handleReorder(value) }
                                 >
                                     <article role="cell" data-column={`value-${value.id}-name`} className={`${colwidths[0]} font-bold flex items-center gap-2`}>

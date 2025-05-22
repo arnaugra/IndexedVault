@@ -96,7 +96,7 @@ function ProjectPage() {
                     <Link href={`/project/${project_id}/section/${section.id}`} key={section.id} className={`card bg-base-200 border-base-300 rounded-box w-full h-full border p-4 ${draggedItem ? isDraging(section.id as number) : ''}`}
                         onDrop={ handleReorder(section) } 
                         onDragEnd={ onDragEnd }
-                        onDragOver={ onDragOver }
+                        onDragOver={ onDragOver(section) }
                     >
                         <div className="flex items-center gap-2">
                             <div className="shrink-0 text-gray-500 -ml-1"

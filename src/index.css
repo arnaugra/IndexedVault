@@ -9,32 +9,29 @@
   scrollbar-color: inherit transparent;
 }
 
-.dragging {
+.not-dragging,
+.dragging,
+.dragging-over {
   opacity: 0.5;
   position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border-radius: inherit;
+    z-index: 10;
+  }
 }
 .dragging::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
   border: 2px dashed var(--color-info-content);
-  border-radius: inherit;
-  z-index: 10;
 }
-
-.not-dragging {
-  opacity: 0.5;
-  position: relative;
+.dragging-over::after {
+  border: 2px dashed var(--color-primary);
 }
 .not-dragging::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
   border: 2px dashed var(--color-info);
-  border-radius: inherit;
-  z-index: 10;
 }
 
 .btn {

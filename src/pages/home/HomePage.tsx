@@ -10,7 +10,7 @@ import DragIcon from "../../svg/DragIcon";
 
 function HomePage () {
 
-  const { draggedItem, onDragStart, onDragEnd, onDragOver, onDrop, reorderItems } = useDragAndDrop<ProjectI>();
+  const { draggedItem, overItem, onDragStart, onDragEnd, onDragOver, onDrop, reorderItems } = useDragAndDrop<ProjectI>();
 
   const projects = useProjectsStore((state) => state.projects);
   const setProjects = useProjectsStore((state) => state.setProjects);
@@ -32,7 +32,12 @@ function HomePage () {
   }
   , [setProjects]);
 
-  const isDraging = (projectId: number) => draggedItem?.id === projectId ? 'dragging' : 'not-dragging'
+  const getOnDraggingClass = (projectId: number): string | undefined => {
+    if (!draggedItem) return;
+    if (draggedItem.id === projectId) return 'dragging';
+    if (overItem?.id === projectId) return 'dragging-over';
+    return 'not-dragging';
+  };
 
   return (
     <section id="page">
@@ -46,10 +51,10 @@ function HomePage () {
         {projects.length === 0
           ? <p className="text-gray-600">No projects found.</p>
           : projects.map((project) => (
-            <Link href={ "/project/" + project.id } key={ project.id } className={`card bg-base-200 border-base-300 rounded-box w-full h-full border p-4 ${draggedItem ? isDraging(project.id as number) : ''}`}
+            <Link href={ "/project/" + project.id } key={ project.id } className={`card bg-base-200 border-base-300 rounded-box w-full h-full border p-4 ${getOnDraggingClass(project.id as number)}`}
             onDrop={ handleReorder(project) } 
             onDragEnd={ onDragEnd }
-            onDragOver={ onDragOver }
+            onDragOver={ onDragOver(project) }
             >
               <div className="flex items-center gap-2">
                   <div className="shrink-0 text-gray-500 -ml-1"
