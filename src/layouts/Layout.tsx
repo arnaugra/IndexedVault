@@ -41,9 +41,10 @@ function AppLayout({ children }: { children: React.ReactNode }) {
                 <button onClick={() => setSidebarOpen(!sidebarOpen)} className="xl:hidden cursor-pointer">
                     {sidebarOpen ? <HamburgerClose stroke strokeWidth="2" /> : <HamburgerOpen stroke strokeWidth="2" />}
                 </button>
-                <Link href="/">
-                    <h1>IndexedVault</h1>
+                <Link href="/" className="flex items-center gap-0.5">
+                    <h1>IndexedVault</h1> {import.meta.env.DEV && <sup className="text-warning font-semibold">dev</sup>}
                 </Link>
+
             </header>
 
             {/* Sidebar */}
