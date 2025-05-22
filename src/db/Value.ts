@@ -17,7 +17,7 @@ export class Value extends Model<ValueI, "id"> {
     }
   
     static async getAllForSection(sectionId: number) {
-        return db.values.where("sectionId").equals(sectionId).toArray();
+        return (await db.values.where("sectionId").equals(sectionId).toArray()).sort((a, b) => (a.order) - (b.order));
     }
   
     static async update(id: number, updates: Partial<ValueI>) {
