@@ -73,7 +73,7 @@ function SectionPage () {
                 <ValueModal section_id={section_id} />
             </span>
         </article>
-        <article>
+        <article className="overflow-x-auto">
             <ValuesTable section_id={section_id} />
         </article>
     </section>

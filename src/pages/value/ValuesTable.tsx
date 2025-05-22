@@ -67,11 +67,11 @@ function ValuesTable(props: {section_id: number}) {
             {
                 values.length === 0 
                     ?   <p className="text-gray-600">No values found.</p>
-                    :   <div className="w-full">
+                    :   <div className="w-full min-w-[800px]">
                             <section role="row" data-section="header" className="flex gap-2 text-sm bg-base-200 text-base-content/60 font-bold">
                                 <article role="cell" className={`${colwidths[0]}`}>Name</article>
                                 <article role="cell" className={`${colwidths[1]}`}>Value</article>
-                                <article role="cell" className={`${colwidths[2]}`}>Expiration Date</article>
+                                <article role="cell" className={`${colwidths[2]} whitespace-nowrap`}>Expiration Date</article>
                                 <article role="cell" className={`${colwidths[3]}`}>Actions</article>
                             </section>
 
