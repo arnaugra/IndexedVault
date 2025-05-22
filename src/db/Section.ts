@@ -46,4 +46,8 @@ export class Section extends Model<SectionI, "id"> {
       }
       return db.sections.delete(id);
     }
+
+    static async count() {
+        return db.projects.count();
+    }
   }
