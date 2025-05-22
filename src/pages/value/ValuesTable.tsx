@@ -76,7 +76,7 @@ function ValuesTable(props: {section_id: number}) {
                                 onDragOver={ onDragOver }
                                 onDrop={ handleReorder(value) }
                                 >
-                                    <article role="cell" data-column={`value-${value.id}-name`} className={`${colwidths[0]} font-bold`}>
+                                    <article role="cell" data-column={`value-${value.id}-name`} className={`${colwidths[0]} font-bold flex items-center gap-2`}>
                                         <div className="shrink-0 text-gray-500"
                                             draggable
                                             onDragStart={ onDragStart(value) }
