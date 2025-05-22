@@ -46,4 +46,8 @@ export class Project extends Model<ProjectI, "id"> {
         }
         return db.projects.delete(id);
     }
+
+    static async count() {
+        return db.projects.count();
+    }
 }
