@@ -6,6 +6,7 @@ import useProjectsStore from "../../stores/ProjectsStore";
 import { useDragAndDrop } from "../../hooks/useDragAndDrop";
 import { ProjectI } from "../../db/interfaces";
 import { Project } from "../../db/Project";
+import DragIcon from "../../svg/DragIcon";
 
 function HomePage () {
 
@@ -46,13 +47,20 @@ function HomePage () {
           ? <p className="text-gray-600">No projects found.</p>
           : projects.map((project) => (
             <Link href={ "/project/" + project.id } key={ project.id } className={`card bg-base-200 border-base-300 rounded-box w-full h-full border p-4 ${draggedItem ? isDraging(project.id as number) : ''}`}
-            draggable
-            onDragStart={ onDragStart(project) }
+            onDrop={ handleReorder(project) } 
             onDragEnd={ onDragEnd }
             onDragOver={ onDragOver }
-            onDrop={ handleReorder(project) } 
             >
-              <h2 className="line-clamp-1">{ project.name }</h2>
+              <div className="flex items-center gap-2">
+                  <div className="shrink-0 text-gray-500 -ml-1"
+                  draggable
+                  onDragStart={ onDragStart(project) }
+                  >
+                      <DragIcon className="w-5 cursor-grab"/>
+
+                  </div>
+                  <h2 className="line-clamp-1">{ project.name }</h2>
+              </div>
               {project.description && <p className="text-gray-600 whitespace-pre-line line-clamp-2">{ project.description }</p>}
             </Link>
             ))
