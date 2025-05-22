@@ -18,7 +18,7 @@ function ProjectPage() {
     const match = useRoute<{project_id: string}>("/project/:project_id")[1];
     const project_id = Number(match?.project_id);
     
-    const { draggedItem, onDragStart, onDragEnd, onDragOver, onDrop, reorderItems } = useDragAndDrop<SectionI>();
+    const { draggedItem, overItem, onDragStart, onDragEnd, onDragOver, onDrop, reorderItems } = useDragAndDrop<SectionI>();
 
     const setProjectName = useProjectStore((state) => state.setProjectName);
     const projectDescription = useProjectStore((state) => state.projectDescription);
@@ -61,7 +61,12 @@ function ProjectPage() {
         navigate("/");
     };
 
-    const isDraging = (sectionId: number) => draggedItem?.id === sectionId ? 'dragging' : 'not-dragging'
+    const getOnDraggingClass = (projectId: number): string | undefined => {
+        if (!draggedItem) return;
+        if (draggedItem.id === projectId) return 'dragging';
+        if (overItem?.id === projectId) return 'dragging-over';
+        return 'not-dragging';
+    };
 
   return (
     <section id="page">
@@ -93,7 +98,7 @@ function ProjectPage() {
             {sections.length === 0
                 ? <p className="text-gray-600">No sections found.</p>
                 : sections.map((section) => (
-                    <Link href={`/project/${project_id}/section/${section.id}`} key={section.id} className={`card bg-base-200 border-base-300 rounded-box w-full h-full border p-4 ${draggedItem ? isDraging(section.id as number) : ''}`}
+                    <Link href={`/project/${project_id}/section/${section.id}`} key={section.id} className={`card bg-base-200 border-base-300 rounded-box w-full h-full border p-4 ${getOnDraggingClass(section.id as number)}`}
                         onDrop={ handleReorder(section) } 
                         onDragEnd={ onDragEnd }
                         onDragOver={ onDragOver(section) }

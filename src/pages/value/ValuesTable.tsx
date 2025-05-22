@@ -21,7 +21,7 @@ function ValuesTable(props: {section_id: number}) {
     const values = useValuesStore((state) => state.values);
     const setValues = useValuesStore((state) => state.setValues);
 
-    const { draggedItem, onDragStart, onDragEnd, onDragOver, onDrop, reorderItems } = useDragAndDrop<ValueI>();
+    const { draggedItem, overItem, onDragStart, onDragEnd, onDragOver, onDrop, reorderItems } = useDragAndDrop<ValueI>();
 
     const setValueIdToEdit = useValueStore((state) => state.setValueIdToEdit);
     const setOpenNewValue = useValueStore((state) => state.setOpenNewValue);
@@ -49,7 +49,12 @@ function ValuesTable(props: {section_id: number}) {
     }
 
     const dateFormat = (date: string) => new Date(date).toLocaleDateString('en-GB');
-    const isDraging = (valueId: number) => draggedItem?.id === valueId ? 'dragging' : 'not-dragging'
+    const getOnDraggingClass = (projectId: number): string | undefined => {
+        if (!draggedItem) return;
+        if (draggedItem.id === projectId) return 'dragging';
+        if (overItem?.id === projectId) return 'dragging-over';
+        return 'not-dragging';
+    };
     const colwidths = [
         "flex w-3/12 px-4 py-3",
         "flex w-9/12 px-4 py-3",
@@ -71,7 +76,7 @@ function ValuesTable(props: {section_id: number}) {
                             </section>
 
                             {values.map((value, index) => (
-                                <section role="row" data-section={`value-${value.id}`} key={value.id} className={`flex text-sm ${draggedItem ? isDraging(value.id as number) : ''} not-last:border-b not-last:border-base-content/5`}
+                                <section role="row" data-section={`value-${value.id}`} key={value.id} className={`flex text-sm ${getOnDraggingClass(value.id as number)} not-last:border-b not-last:border-base-content/5`}
                                 onDragEnd={ onDragEnd }
                                 onDragOver={ onDragOver(value) }
                                 onDrop={ handleReorder(value) }
