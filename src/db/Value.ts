@@ -28,4 +28,8 @@ export class Value extends Model<ValueI, "id"> {
     static async delete(id: number) {
         return db.values.delete(id);
     }
+
+    static async count() {
+        return db.projects.count();
+    }
 }

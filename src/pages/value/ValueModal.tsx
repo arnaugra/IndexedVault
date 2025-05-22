@@ -102,6 +102,7 @@ function ValueModal(props: {section_id: number}) {
                 value: finalValue,
                 type: localValue.type,
                 expirationDate: localValue.expirationDate,
+                order: await Value.count(),
             });
         }
 
