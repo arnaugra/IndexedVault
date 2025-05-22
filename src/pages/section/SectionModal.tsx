@@ -66,7 +66,7 @@ function SectionModal (props: {project_id?: number, section_id?: number}) {
                 name: LocalSection.name,
                 description: LocalSection.description,
                 projectId: props.project_id!,
-                order: await Section.count(),
+                order: await Section.count() + 1,
             });
         }
 

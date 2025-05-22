@@ -62,11 +62,10 @@ function ProjectModal (props: {project_id?: number}) {
             setProjectName(LocalProject.name);
             setProjectDescription(LocalProject.description);
         } else {
-            const projectsCount = await Project.count();
             await Project.create({
                 name: LocalProject.name,
                 description: LocalProject.description,
-                order: projectsCount + 1,
+                order: await Project.count() + 1,
             });
         }
 
