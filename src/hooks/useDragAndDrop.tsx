@@ -20,7 +20,8 @@ export function useDragAndDrop<T extends withId>(): UseDragAndDropReturn<T> {
         setDraggedItem(item);
     };
 
-    const onDragOver = (item: T) => () => {
+    const onDragOver = (item: T) => (e: React.DragEvent<HTMLDivElement>) => {
+        e.preventDefault();
         setOverItem(item);
     };
 
