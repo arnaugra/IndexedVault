@@ -50,6 +50,7 @@ export async function decrypt(encrypted: string, password: string): Promise<stri
         const decoder = new TextDecoder();
         return decoder.decode(decryptedContent);
     } catch (error) {
+        console.error(error);
         const addError = useErrorStore.getState().addError;
         addError({
             id: Math.random(),
