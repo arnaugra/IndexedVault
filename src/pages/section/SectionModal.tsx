@@ -41,7 +41,9 @@ function SectionModal (props: {project_id?: number, section_id?: number}) {
         }
 
         init();
-    }, [openNewSection]);
+    }, [openNewSection,
+        edit, props.section_id
+    ]);
 
     const handleSectionInput = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;

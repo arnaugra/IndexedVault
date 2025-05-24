@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import useValueStore, { ValueTypes } from "../../stores/ValueStore";
 import useValuesStore from "../../stores/ValuesStore";
 import useEncryptStore from "../../stores/EncryptStore";
@@ -30,13 +30,13 @@ function ValueModal(props: {section_id: number}) {
     const setValues = useValuesStore((state) => state.setValues);
     const encryptionKey = useEncryptStore((state) => state.encryptionKey);
 
-    const inputValue = async (value: string, type: ValueTypes) => {
+    const inputValue = useCallback( async (value: string, type: ValueTypes) => {
         if (type === ValueTypes.PASSWORD && encryptionKey) {
             const decryptedValue = await decrypt(value, encryptionKey);
             return decryptedValue ?? "";
         }
         return value;
-    }
+    }, [encryptionKey]);
 
     useEffect(() => {
         if (!openNewValue) {
@@ -62,7 +62,9 @@ function ValueModal(props: {section_id: number}) {
         }
 
         init();
-    }, [openNewValue]);
+    }, [openNewValue, 
+        valueIdToEdit, inputValue
+    ]);
 
     const closeValueModal = () => {
         setValueIdToEdit(undefined);

@@ -18,7 +18,10 @@ function EncryptModal() {
         } else {
             setInputValue("");
         }
-    }, [openModal]);
+    }, [
+        openModal,
+        deleteEncryptionKey
+    ]);
 
     const handleEncryptionInput = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;

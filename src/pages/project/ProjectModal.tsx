@@ -41,7 +41,9 @@ function ProjectModal (props: {project_id?: number}) {
         }
 
         init();
-    }, [openNewProject]);
+    }, [openNewProject,
+        edit, props.project_id,
+    ]);
 
     const handleProjectInput = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;

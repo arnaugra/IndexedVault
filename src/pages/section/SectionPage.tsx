@@ -40,7 +40,7 @@ function SectionPage () {
         fetchSection();
         setValues(section_id);
 
-    }, [navigate, section_id, setSectionDescription, setSectionName, setValues]);
+    }, [navigate, section_id, project_id, setSectionDescription, setSectionName, setValues]);
 
     const [openConfirmationModal, setOpenConfirmationModal] = useState(false);
     const deleteProject = async () => {
