@@ -1,4 +1,4 @@
-export const createError = (name: string) => {
+export const createError = function(name: string) {
     return class CustomError extends Error {
         constructor(message: string) {
             super(message);
