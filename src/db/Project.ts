@@ -48,11 +48,28 @@ export class Project extends Model<ProjectI, "id"> {
     }
 
     static async getById(id: number, includeRelations: boolean = false) {
-        const project = await db.projects.get(id);
-        if (project && includeRelations) {
-            project.sections = await Section.getAllForProject(project.id!, includeRelations);
+        try {
+            const project = await db.projects.get(id);
+            if (!project) throw new ProjectGetError(`Project with id ${id} not found`);
+
+            if (includeRelations) project.sections = await Section.getAllForProject(project.id!, includeRelations);
+            return project;
+
+        } catch (error) {
+            ProjectGetError.errorIsInstanceOf(error, (error) => {
+                addError({
+                    id: Math.random(),
+                    message: error.message,
+                    type: ErrorsTypes.error,
+                    timestamp: Date.now()
+                });
+                throw error;
+            });
+
+            genericError("fetching the project");
+            throw error;
+            
         }
-        return project;
     }
 
     static async getAll(includeRelations: boolean = false) {
