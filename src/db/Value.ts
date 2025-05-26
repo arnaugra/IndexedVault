@@ -17,6 +17,14 @@ export class Value extends Model<ValueI, "id"> {
             if (existingValue) throw new ValueGetError(`Value with name "${value.name}" already exists in section with ID ${value.sectionId}`);
 
             const id = await db.values.add(value);
+
+            addToast({
+                id: Math.random(),
+                message: "Value created successfully",
+                type: ToastsTypes.info,
+                timestamp: Date.now()
+            });
+
             return { ...value, id };
 
         } catch (error) {
@@ -86,6 +94,14 @@ export class Value extends Model<ValueI, "id"> {
     static async update(id: number, updates: Partial<ValueI>) {
         try {
             await db.values.update(id, updates);
+
+            addToast({
+                id: Math.random(),
+                message: "Value updated successfully",
+                type: ToastsTypes.info,
+                timestamp: Date.now()
+            });
+
             return db.values.get(id);
             
         } catch (error) {
@@ -97,6 +113,13 @@ export class Value extends Model<ValueI, "id"> {
   
     static async delete(id: number) {
         try {
+            addToast({
+                id: Math.random(),
+                message: "Value deleted successfully",
+                type: ToastsTypes.info,
+                timestamp: Date.now()
+            });
+
             return db.values.delete(id);
             
         } catch (error) {
