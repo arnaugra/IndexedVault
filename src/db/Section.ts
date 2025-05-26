@@ -99,22 +99,42 @@ export class Section extends Model<SectionI, "id"> {
     }
   
     static async update(id: number, updates: Partial<SectionI>) {
-      const updateData = updates;
-      delete updateData.values;
-      await db.sections.update(id, updateData);
-      return this.getById(id);
+      try {
+        const updateData = updates;
+        delete updateData.values;
+        await db.sections.update(id, updateData);
+        return this.getById(id);
+        
+      } catch (error) {
+        genericError("updating the section");
+        throw error;
+        
+      }
     }
   
     static async delete(id: number) {
-      const valueIds = (await db.values.where("sectionId").equals(id).primaryKeys()) as number[];
-      for (const vid of valueIds) {
-        await Value.delete(vid);
+      try {
+        const valueIds = (await db.values.where("sectionId").equals(id).primaryKeys()) as number[];
+        for (const vid of valueIds) {
+          await Value.delete(vid);
+        }
+        return db.sections.delete(id);
+        
+      } catch (error) {
+        genericError("deleting the section");
+        throw error;
+        
       }
-      return db.sections.delete(id);
     }
 
     static async count() {
+      try {
         return db.projects.count();
+        
+      } catch (error) {
+        genericError("counting the sections");
+        throw error;
+      }
     }
   }
 
