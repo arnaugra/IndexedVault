@@ -16,8 +16,20 @@ export class Config extends Model<ConfigI, "id"> {
             const existingConfig = await db.config.where("name").equals(value.name).first();
 
             if (existingConfig && existingConfig.id) {
+                addToast({
+                    id: Math.random(),
+                    message: `Configuration "${value.name}" updated`,
+                    type: ToastsTypes.info,
+                    timestamp: Date.now()
+                });
                 return await db.config.update(existingConfig.id, value)
             } else {
+                addToast({
+                    id: Math.random(),
+                    message: `Configuration "${value.name}" created`,
+                    type: ToastsTypes.info,
+                    timestamp: Date.now()
+                });
                 return await db.config.add(value);
             }
 
@@ -55,6 +67,14 @@ export class Config extends Model<ConfigI, "id"> {
         try {
             const existingConfig = await db.config.get(id);
             if (!existingConfig) throw new ConfigDeleteError(`Configuration with id ${id} not found`);
+
+            addToast({
+                id: Math.random(),
+                message: `Configuration "${existingConfig.name}" deleted`,
+                type: ToastsTypes.info,
+                timestamp: Date.now()
+            });
+
             return db.config.delete(id);
 
         } catch (error) {
