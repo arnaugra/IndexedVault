@@ -36,6 +36,25 @@ export class Value extends Model<ValueI, "id"> {
     }
   
     static async getById(id: number) {
+        try {
+            const value = await db.values.get(id);
+            if (!value) throw new ValueGetError(`Value not found`);
+            return value;
+        } catch (error) {
+            ValueGetError.errorIsInstanceOf(error, (error) => {
+                addError({
+                    id: Math.random(),
+                    message: error.message,
+                    type: ErrorsTypes.error,
+                    timestamp: Date.now()
+                });
+                throw error;
+            });
+
+            genericError("fetching the value");
+            throw error;
+            
+        }
         return db.values.get(id);
     }
   
