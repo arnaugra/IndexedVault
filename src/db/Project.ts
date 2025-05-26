@@ -1,3 +1,4 @@
+import { add } from "dexie";
 import useToastStore, { ToastsTypes, genericError } from "../stores/ErrorStore";
 import { createError } from "../utils/error";
 import { db } from "./db";
@@ -17,6 +18,13 @@ export class Project extends Model<ProjectI, "id"> {
             if (existingProject) throw new ProjectGetError(`Project with name ${project.name} already exists`);
 
             const id = await db.projects.add(project);
+
+            addToast({
+                id: Math.random(),
+                message: "Project created successfully",
+                type: ToastsTypes.info,
+                timestamp: Date.now()
+            });
 
             return { ...project, id };
         } catch (error) {
@@ -97,6 +105,14 @@ export class Project extends Model<ProjectI, "id"> {
             const updateData = { ...updates };
             delete updateData.sections;
             await db.projects.update(id, updateData);
+
+            addToast({
+                id: Math.random(),
+                message: "Project updated successfully",
+                type: ToastsTypes.info,
+                timestamp: Date.now()
+            });
+
             return this.getById(id);
             
         } catch (error) {
@@ -112,6 +128,14 @@ export class Project extends Model<ProjectI, "id"> {
             for (const sid of sectionIds) {
                 await Section.delete(sid);
             }
+
+            addToast({
+                id: Math.random(),
+                message: "Project deleted successfully",
+                type: ToastsTypes.info,
+                timestamp: Date.now()
+            });
+
             return db.projects.delete(id);
 
         } catch (error) {
