@@ -1,4 +1,3 @@
-import { add } from "dexie";
 import useToastStore, { ToastsTypes, genericError } from "../stores/ErrorStore";
 import { createError } from "../utils/error";
 import { db } from "./db";
