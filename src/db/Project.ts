@@ -125,7 +125,7 @@ export class Project extends Model<ProjectI, "id"> {
         try {
             const sectionIds = (await db.sections.where("projectId").equals(id).primaryKeys()) as number[];
             for (const sid of sectionIds) {
-                await Section.delete(sid);
+                await db.sections.delete(sid);
             }
 
             addToast({

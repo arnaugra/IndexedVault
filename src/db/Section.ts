@@ -3,6 +3,7 @@ import { createError } from "../utils/error";
 import { db } from "./db";
 import { SectionI } from "./interfaces";
 import { Model } from "./Model";
+import { Project } from "./Project";
 import { Value } from "./Value";
 
 const { addToast } = useToastStore.getState();
@@ -76,7 +77,7 @@ export class Section extends Model<SectionI, "id"> {
     static async getAllForProject(projectId: number, includeRelations: boolean = false) {
 
       try {
-        const project = await db.projects.get(projectId);
+        const project = await Project.getById(projectId);
         if (!project) throw new SectionGetError(`Project with id ${projectId} not found`);
 
         const sections = await db.sections.where("projectId").equals(projectId).toArray();
@@ -90,6 +91,7 @@ export class Section extends Model<SectionI, "id"> {
         return sections; 
 
       } catch (error) {
+        console.trace('aaaaaaa', error);
         SectionGetError.errorIsInstanceOf(error, (error) => {
           addToast({
             id: Math.random(),
@@ -132,7 +134,7 @@ export class Section extends Model<SectionI, "id"> {
       try {
         const valueIds = (await db.values.where("sectionId").equals(id).primaryKeys()) as number[];
         for (const vid of valueIds) {
-          await Value.delete(vid);
+          await db.values.delete(vid);
         }
 
         addToast({

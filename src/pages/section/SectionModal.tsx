@@ -13,8 +13,8 @@ const sectionBase = {
     description: "",
 }
 
-function SectionModal (props: {project_id?: number, section_id?: number}) {
-    const edit = props.section_id !== undefined;
+function SectionModal ({ project_id, section_id }: {project_id?: number, section_id?: number}) {
+    const edit = section_id !== undefined;
     const [openNewSection, setOpenNewSection] = useState(false);
 
     const [LocalSection, setLocalSection] = useState(sectionBase);
@@ -30,7 +30,7 @@ function SectionModal (props: {project_id?: number, section_id?: number}) {
         }
         const init = async () => {
             if (edit) {
-                await Section.getById(props.section_id!).then((section) => {
+                await Section.getById(section_id!).then((section) => {
                     setLocalSection({
                         name: section?.name ?? "",
                         nameError: false,
@@ -42,7 +42,7 @@ function SectionModal (props: {project_id?: number, section_id?: number}) {
 
         init();
     }, [openNewSection,
-        edit, props.section_id
+        edit, section_id
     ]);
 
     const handleSectionInput = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -57,24 +57,27 @@ function SectionModal (props: {project_id?: number, section_id?: number}) {
         }
 
         if (edit) {
-            await Section.update(props.section_id!, {
+            await Section.update(section_id!, {
                 name: LocalSection.name,
                 description: LocalSection.description,
             });
             setSectionName(LocalSection.name);
             setSectionDescription(LocalSection.description);
         } else {
-            await Section.create({
-                name: LocalSection.name,
-                description: LocalSection.description,
-                projectId: props.project_id!,
-                order: await Section.count() + 1,
-            });
+            if (project_id) {
+                await Section.create({
+                    name: LocalSection.name,
+                    description: LocalSection.description,
+                    projectId: project_id,
+                    order: await Section.count() + 1,
+                });
+            }
         }
 
+        console.log(project_id);
+        if (project_id) setSections(project_id);
         setLocalSection(sectionBase);
         setOpenNewSection(false);
-        setSections(props.project_id!);
 
     }
 
