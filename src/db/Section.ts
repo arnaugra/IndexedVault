@@ -1,3 +1,4 @@
+import { add } from "dexie";
 import useToastStore, { ToastsTypes, genericError } from "../stores/ErrorStore";
 import { createError } from "../utils/error";
 import { db } from "./db";
@@ -21,6 +22,14 @@ export class Section extends Model<SectionI, "id"> {
         }
 
         const id = await db.sections.add(section);
+
+        addToast({
+          id: Math.random(),
+          message: "Section created successfully",
+          type: ToastsTypes.info,
+          timestamp: Date.now()
+        });
+
         return { ...section, id };
         
       } catch (error) {
@@ -103,6 +112,14 @@ export class Section extends Model<SectionI, "id"> {
         const updateData = updates;
         delete updateData.values;
         await db.sections.update(id, updateData);
+
+        addToast({
+          id: Math.random(),
+          message: "Section updated successfully",
+          type: ToastsTypes.info,
+          timestamp: Date.now()
+        });
+
         return this.getById(id);
         
       } catch (error) {
@@ -118,6 +135,14 @@ export class Section extends Model<SectionI, "id"> {
         for (const vid of valueIds) {
           await Value.delete(vid);
         }
+
+        addToast({
+          id: Math.random(),
+          message: "Section deleted successfully",
+          type: ToastsTypes.info,
+          timestamp: Date.now()
+        });
+
         return db.sections.delete(id);
         
       } catch (error) {
