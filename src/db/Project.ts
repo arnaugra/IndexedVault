@@ -1,11 +1,11 @@
-import useErrorStore, { ErrorsTypes, genericError } from "../stores/ErrorStore";
+import useToastStore, { ToastsTypes, genericError } from "../stores/ErrorStore";
 import { createError } from "../utils/error";
 import { db } from "./db";
 import { ProjectI } from "./interfaces";
 import { Model } from "./Model";
 import { Section } from "./Section";
 
-const { addError } = useErrorStore.getState()
+const { addToast } = useToastStore.getState()
 export class Project extends Model<ProjectI, "id"> {
     constructor() {
         super(db.projects);
@@ -21,10 +21,10 @@ export class Project extends Model<ProjectI, "id"> {
             return { ...project, id };
         } catch (error) {
             ProjectGetError.errorIsInstanceOf(error, (error) => {
-                addError({
+                addToast({
                     id: Math.random(),
                     message: error.message,
-                    type: ErrorsTypes.error,
+                    type: ToastsTypes.error,
                     timestamp: Date.now()
                 });
                 throw error;
@@ -46,10 +46,10 @@ export class Project extends Model<ProjectI, "id"> {
 
         } catch (error) {
             ProjectGetError.errorIsInstanceOf(error, (error) => {
-                addError({
+                addToast({
                     id: Math.random(),
                     message: error.message,
-                    type: ErrorsTypes.error,
+                    type: ToastsTypes.error,
                     timestamp: Date.now()
                 });
                 throw error;
@@ -76,10 +76,10 @@ export class Project extends Model<ProjectI, "id"> {
 
         } catch (error) {
             ProjectGetError.errorIsInstanceOf(error, (error) => {
-                addError({
+                addToast({
                     id: Math.random(),
                     message: error.message,
-                    type: ErrorsTypes.error,
+                    type: ToastsTypes.error,
                     timestamp: Date.now()
                 });
                 throw error;

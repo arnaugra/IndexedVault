@@ -1,4 +1,4 @@
-import useErrorStore, { ErrorsTypes } from "../stores/ErrorStore";
+import useToastStore, { ToastsTypes } from "../stores/ErrorStore";
 
 export async function encrypt(text: string, password: string): Promise<string> {
     const encoder = new TextEncoder();
@@ -51,11 +51,11 @@ export async function decrypt(encrypted: string, password: string): Promise<stri
         return decoder.decode(decryptedContent);
     } catch (error) {
         console.error(error);
-        const addError = useErrorStore.getState().addError;
-        addError({
+        const addToast = useToastStore.getState().addToast;
+        addToast({
             id: Math.random(),
             message: "Decryption failed. Please check your password.",
-            type: ErrorsTypes.error,
+            type: ToastsTypes.error,
             timestamp: Date.now()
         });
         return undefined;

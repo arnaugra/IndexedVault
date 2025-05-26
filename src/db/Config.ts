@@ -1,10 +1,10 @@
-import useErrorStore, { ErrorsTypes, genericError } from "../stores/ErrorStore";
+import useToastStore, { ToastsTypes, genericError } from "../stores/ErrorStore";
 import { createError } from "../utils/error";
 import { db } from "./db";
 import { ConfigI } from "./interfaces";
 import { Model } from "./Model";
 
-const { addError } = useErrorStore.getState()
+const { addToast } = useToastStore.getState()
 
 export class Config extends Model<ConfigI, "id"> {
     constructor() {
@@ -36,10 +36,10 @@ export class Config extends Model<ConfigI, "id"> {
 
         } catch (error) {
             ConfigGetError.errorIsInstanceOf(error, (error) => {
-                addError({
+                addToast({
                     id: Math.random(),
                     message: error.message,
-                    type: ErrorsTypes.error,
+                    type: ToastsTypes.error,
                     timestamp: Date.now()
                 });
                 throw error;
@@ -59,10 +59,10 @@ export class Config extends Model<ConfigI, "id"> {
 
         } catch (error) {
             ConfigDeleteError.errorIsInstanceOf(error, (error) => {
-                addError({
+                addToast({
                     id: Math.random(),
                     message: error.message,
-                    type: ErrorsTypes.error,
+                    type: ToastsTypes.error,
                     timestamp: Date.now()
                 });
                 throw error;

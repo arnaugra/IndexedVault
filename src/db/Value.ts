@@ -1,10 +1,10 @@
-import useErrorStore, { ErrorsTypes, genericError } from "../stores/ErrorStore";
+import useToastStore, { ToastsTypes, genericError } from "../stores/ErrorStore";
 import { createError } from "../utils/error";
 import { db } from "./db";
 import { ValueI } from "./interfaces";
 import { Model } from "./Model";
 
-const { addError } = useErrorStore.getState();
+const { addToast } = useToastStore.getState();
 
 export class Value extends Model<ValueI, "id"> {
     constructor() {
@@ -21,10 +21,10 @@ export class Value extends Model<ValueI, "id"> {
 
         } catch (error) {
             ValueGetError.errorIsInstanceOf(error, (error) => {
-                addError({
+                addToast({
                     id: Math.random(),
                     message: error.message,
-                    type: ErrorsTypes.error,
+                    type: ToastsTypes.error,
                     timestamp: Date.now()
                 });
                 throw error;
@@ -42,10 +42,10 @@ export class Value extends Model<ValueI, "id"> {
             return value;
         } catch (error) {
             ValueGetError.errorIsInstanceOf(error, (error) => {
-                addError({
+                addToast({
                     id: Math.random(),
                     message: error.message,
-                    type: ErrorsTypes.error,
+                    type: ToastsTypes.error,
                     timestamp: Date.now()
                 });
                 throw error;
@@ -68,10 +68,10 @@ export class Value extends Model<ValueI, "id"> {
             return values;
         } catch (error) {
             ValueGetError.errorIsInstanceOf(error, (error) => {
-                addError({
+                addToast({
                     id: Math.random(),
                     message: error.message,
-                    type: ErrorsTypes.error,
+                    type: ToastsTypes.error,
                     timestamp: Date.now()
                 });
                 throw error;

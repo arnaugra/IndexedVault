@@ -1,11 +1,11 @@
-import useErrorStore, { ErrorsTypes, genericError } from "../stores/ErrorStore";
+import useToastStore, { ToastsTypes, genericError } from "../stores/ErrorStore";
 import { createError } from "../utils/error";
 import { db } from "./db";
 import { SectionI } from "./interfaces";
 import { Model } from "./Model";
 import { Value } from "./Value";
 
-const { addError } = useErrorStore.getState();
+const { addToast } = useToastStore.getState();
 
 export class Section extends Model<SectionI, "id"> {
     constructor() {
@@ -25,10 +25,10 @@ export class Section extends Model<SectionI, "id"> {
         
       } catch (error) {
         SectionGetError.errorIsInstanceOf(error, (error) => {
-          addError({
+          addToast({
             id: Math.random(),
             message: error.message,
-            type: ErrorsTypes.error,
+            type: ToastsTypes.error,
             timestamp: Date.now()
           });
           throw error;
@@ -50,10 +50,10 @@ export class Section extends Model<SectionI, "id"> {
 
       } catch (error) {
         SectionGetError.errorIsInstanceOf(error, (error) => {
-          addError({
+          addToast({
             id: Math.random(),
             message: error.message,
-            type: ErrorsTypes.error,
+            type: ToastsTypes.error,
             timestamp: Date.now()
           });
           throw error;
@@ -83,10 +83,10 @@ export class Section extends Model<SectionI, "id"> {
 
       } catch (error) {
         SectionGetError.errorIsInstanceOf(error, (error) => {
-          addError({
+          addToast({
             id: Math.random(),
             message: error.message,
-            type: ErrorsTypes.error,
+            type: ToastsTypes.error,
             timestamp: Date.now()
           });
           throw error;

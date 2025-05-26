@@ -2,29 +2,29 @@ import { create } from "zustand";
 
 // TODO: change the error naming to toast
 
-enum ErrorsTypes {
+enum ToastsTypes {
     info = "info",
     warning = "warning",
     error = "error",
 }
 
-type ErrorsType = {
+type ToastType = {
     id: number;
     message: string;
-    type: ErrorsTypes;
+    type: ToastsTypes;
     timestamp: number;
 };
 
-interface ErrorStore {
-    errors: ErrorsType[];
-    addError: (error: ErrorsType) => void;
-    removeError: (index: number) => void;
+interface ToastStore {
+    toasts: ToastType[];
+    addToast: (toast: ToastType) => void;
+    removeToast: (index: number) => void;
 };
 
-const useErrorStore = create<ErrorStore>((set) => ({
-    errors: [],
-    addError: (error) => set((state) => ({ errors: [...state.errors, error] })),
-    removeError: (id) => set((state) => ({ errors: state.errors.filter((error) => error.id !== id) })),
+const useToastStore = create<ToastStore>((set) => ({
+    toasts: [],
+    addToast: (toast) => set((state) => ({ toasts: [...state.toasts, toast] })),
+    removeToast: (id) => set((state) => ({ toasts: state.toasts.filter((toasts) => toasts.id !== id) })),
 }));
 
 /**
@@ -34,14 +34,14 @@ const useErrorStore = create<ErrorStore>((set) => ({
  * @example "An unexpected error occurred while [message]"
  */
 const genericError = (message: string) => {
-    useErrorStore.getState().addError({
+    useToastStore.getState().addToast({
         id: Math.random(),
         message: `An unexpected error occurred while ${message}`,
-        type: ErrorsTypes.error,
+        type: ToastsTypes.error,
         timestamp: Date.now(),
     });
 }
 
-export default useErrorStore;
-export type { ErrorsType };
-export { ErrorsTypes, genericError };
+export default useToastStore;
+export type { ToastType };
+export { ToastsTypes, genericError };

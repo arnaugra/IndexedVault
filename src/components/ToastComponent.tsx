@@ -1,11 +1,11 @@
-import useErrorStore, { ErrorsType, ErrorsTypes } from "../stores/ErrorStore";
+import useToastStore, { ToastType, ToastsTypes } from "../stores/ErrorStore";
 import CloseIcon from "../svg/CloseIcon";
 import ToastErrorIcon from "../svg/ToastErrorIcon";
 import ToastInfoIcon from "../svg/ToastInfoIcon";
 import ToastWarningIcon from "../svg/ToastWarningIcon";
 
 function ToastCompoennt() {
-    const errors = useErrorStore((state) => state.errors);
+    const errors = useToastStore((state) => state.toasts);
 
     return (
         <>
@@ -18,26 +18,26 @@ function ToastCompoennt() {
     );
 }
 
-function ToastItem({error}: {error: ErrorsType}) {
+function ToastItem({error}: {error: ToastType}) {
 
-    const removeError = useErrorStore((state) => state.removeError);
+    const removeToast = useToastStore((state) => state.removeToast);
     const { message, type, timestamp, id } = error;
 
     const maxToastTime = 1000 * 10; // 10 seconds
 
     setTimeout(() => {
-        removeError(id);
+        removeToast(id);
     }, (timestamp + maxToastTime) - timestamp);
 
     return (
         <div role="alert" className={`alert alert-${type} w-full md:max-w-96 md:w-auto`}>
             {{
-                [ErrorsTypes.info]: <ToastInfoIcon className="w-6" />,
-                [ErrorsTypes.warning]: <ToastWarningIcon className="w-6" />,
-                [ErrorsTypes.error]: <ToastErrorIcon className="w-6" />,
+                [ToastsTypes.info]: <ToastInfoIcon className="w-6" />,
+                [ToastsTypes.warning]: <ToastWarningIcon className="w-6" />,
+                [ToastsTypes.error]: <ToastErrorIcon className="w-6" />,
             }[type]}
             <span>{message}</span>
-            <button className="btn btn-ghost btn-circle btn-xs" onClick={() => removeError(id)}><CloseIcon /></button>
+            <button className="btn btn-ghost btn-circle btn-xs" onClick={() => removeToast(id)}><CloseIcon /></button>
         </div>
     );
 }
