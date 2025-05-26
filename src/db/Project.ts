@@ -17,21 +17,10 @@ export class Project extends Model<ProjectI, "id"> {
             if (existingProject) throw new ProjectGetError(`Project with name ${project.name} already exists`);
 
             const id = await db.projects.add(project);
-            if (!id) throw new ProjectCreateError("Could not create project");
 
             return { ...project, id };
         } catch (error) {
             ProjectGetError.errorIsInstanceOf(error, (error) => {
-                addError({
-                    id: Math.random(),
-                    message: error.message,
-                    type: ErrorsTypes.error,
-                    timestamp: Date.now()
-                });
-                throw error;
-            });
-
-            ProjectCreateError.errorIsInstanceOf(error, (error) => {
                 addError({
                     id: Math.random(),
                     message: error.message,
