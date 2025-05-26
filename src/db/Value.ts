@@ -55,7 +55,6 @@ export class Value extends Model<ValueI, "id"> {
             throw error;
             
         }
-        return db.values.get(id);
     }
   
     static async getAllForSection(sectionId: number) {
