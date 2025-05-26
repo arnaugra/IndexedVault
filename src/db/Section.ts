@@ -41,11 +41,28 @@ export class Section extends Model<SectionI, "id"> {
     }
   
     static async getById(id: number, includeRelations: boolean = false) {
-      const section = await db.sections.get(id);
-      if (section && includeRelations) {
-        section.values = await Value.getAllForSection(id);
+      try {
+        const section = await db.sections.get(id);
+        if (!section) throw new SectionGetError(`Section not found`);
+
+        if (includeRelations) section.values = await Value.getAllForSection(id);
+        return section;
+
+      } catch (error) {
+        SectionGetError.errorIsInstanceOf(error, (error) => {
+          addError({
+            id: Math.random(),
+            message: error.message,
+            type: ErrorsTypes.error,
+            timestamp: Date.now()
+          });
+          throw error;
+        });
+
+        genericError("fetching the section");
+        throw error;
+        
       }
-      return section;
     }
   
     static async getAllForProject(projectId: number, includeRelations: boolean = false) {
