@@ -73,14 +73,34 @@ export class Project extends Model<ProjectI, "id"> {
     }
 
     static async getAll(includeRelations: boolean = false) {
-        const projects = await db.projects.toArray();
-        projects.sort((a, b) => (a.order) - (b.order));
-        if (includeRelations) {
-            for (const project of projects) {
-            project.sections = await Section.getAllForProject(project.id!, includeRelations);
+        try {
+            const projects = await db.projects.toArray();
+            if (!projects) throw new ProjectGetError("No projects found");
+
+            projects.sort((a, b) => (a.order) - (b.order));
+            if (includeRelations) {
+                for (const project of projects) {
+                    project.sections = await Section.getAllForProject(project.id!, includeRelations);
+                }
             }
+            return projects;
+
+        } catch (error) {
+            ProjectGetError.errorIsInstanceOf(error, (error) => {
+                addError({
+                    id: Math.random(),
+                    message: error.message,
+                    type: ErrorsTypes.error,
+                    timestamp: Date.now()
+                });
+                throw error;
+
+            });
+
+            genericError("fetching all projects");
+            throw error;
+            
         }
-        return projects;
     }
 
     static async update(id: number, updates: Partial<ProjectI>) {
