@@ -1,16 +1,50 @@
+import useErrorStore, { ErrorsTypes, genericError } from "../stores/ErrorStore";
+import { createError } from "../utils/error";
 import { db } from "./db";
 import { ProjectI } from "./interfaces";
 import { Model } from "./Model";
 import { Section } from "./Section";
 
+const { addError } = useErrorStore.getState()
 export class Project extends Model<ProjectI, "id"> {
     constructor() {
         super(db.projects);
     }
 
     static async create(project: Omit<ProjectI, "id" | "sections">) {
-        const id = await db.projects.add(project);
-        return { ...project, id };
+        try {
+            const existingProject = await db.projects.where("name").equals(project.name).first();
+            if (existingProject) throw new ProjectGetError(`Project with name ${project.name} already exists`);
+
+            const id = await db.projects.add(project);
+            if (!id) throw new ProjectCreateError("Could not create project");
+
+            return { ...project, id };
+        } catch (error) {
+            ProjectGetError.errorIsInstanceOf(error, (error) => {
+                addError({
+                    id: Math.random(),
+                    message: error.message,
+                    type: ErrorsTypes.error,
+                    timestamp: Date.now()
+                });
+                throw error;
+            });
+
+            ProjectCreateError.errorIsInstanceOf(error, (error) => {
+                addError({
+                    id: Math.random(),
+                    message: error.message,
+                    type: ErrorsTypes.error,
+                    timestamp: Date.now()
+                });
+                throw error;
+            });
+
+            genericError("creating the project");
+            throw error;
+            
+        }
     }
 
     static async getById(id: number, includeRelations: boolean = false) {
@@ -51,3 +85,6 @@ export class Project extends Model<ProjectI, "id"> {
         return db.projects.count();
     }
 }
+
+const ProjectGetError = createError("ProjectGetError");
+const ProjectCreateError = createError("ProjectCreateError");
