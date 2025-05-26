@@ -84,17 +84,36 @@ export class Value extends Model<ValueI, "id"> {
     }
   
     static async update(id: number, updates: Partial<ValueI>) {
-        await db.values.update(id, updates);
-        return db.values.get(id);
+        try {
+            await db.values.update(id, updates);
+            return db.values.get(id);
+            
+        } catch (error) {
+            genericError("updating the value");
+            throw error;
+
+        }
     }
   
     static async delete(id: number) {
-        return db.values.delete(id);
+        try {
+            return db.values.delete(id);
+            
+        } catch (error) {
+            genericError("deleting the value");
+            throw error;
+        }
     }
 
     static async count() {
-        return db.projects.count();
+        try {
+            return db.projects.count();
+        } catch (error) {
+            genericError("counting values");
+            throw error;
+        }
     }
+
 }
 
 const ValueGetError = createError("ValueGetError");
