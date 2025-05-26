@@ -58,7 +58,29 @@ export class Value extends Model<ValueI, "id"> {
     }
   
     static async getAllForSection(sectionId: number) {
-        return (await db.values.where("sectionId").equals(sectionId).toArray()).sort((a, b) => (a.order) - (b.order));
+        try {
+            const section = await db.sections.get(sectionId);
+            if (!section) throw new ValueGetError(`Section with id ${sectionId} not found`);
+
+            const values = await db.values.where("sectionId").equals(sectionId).toArray();
+            values.sort((a, b) => (a.order) - (b.order));
+
+            return values;
+        } catch (error) {
+            ValueGetError.errorIsInstanceOf(error, (error) => {
+                addError({
+                    id: Math.random(),
+                    message: error.message,
+                    type: ErrorsTypes.error,
+                    timestamp: Date.now()
+                });
+                throw error;
+            });
+
+            genericError("fetching values for section");
+            throw error;
+            
+        }
     }
   
     static async update(id: number, updates: Partial<ValueI>) {
