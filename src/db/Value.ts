@@ -1,6 +1,10 @@
+import useErrorStore, { ErrorsTypes, genericError } from "../stores/ErrorStore";
+import { createError } from "../utils/error";
 import { db } from "./db";
 import { ValueI } from "./interfaces";
 import { Model } from "./Model";
+
+const { addError } = useErrorStore.getState();
 
 export class Value extends Model<ValueI, "id"> {
     constructor() {
@@ -8,8 +12,27 @@ export class Value extends Model<ValueI, "id"> {
     }
   
     static async create(value: Omit<ValueI, "id">) {
-        const id = await db.values.add(value);
-        return { ...value, id };
+        try {
+            const existingValue = await db.values.where("[sectionId+name]").equals([value.sectionId, value.name]).first();
+            if (existingValue) throw new ValueGetError(`Value with name "${value.name}" already exists in section with ID ${value.sectionId}`);
+
+            const id = await db.values.add(value);
+            return { ...value, id };
+
+        } catch (error) {
+            ValueGetError.errorIsInstanceOf(error, (error) => {
+                addError({
+                    id: Math.random(),
+                    message: error.message,
+                    type: ErrorsTypes.error,
+                    timestamp: Date.now()
+                });
+                throw error;
+            });
+            genericError("creating the value");
+            throw error;
+            
+        }
     }
   
     static async getById(id: number) {
@@ -33,3 +56,5 @@ export class Value extends Model<ValueI, "id"> {
         return db.projects.count();
     }
 }
+
+const ValueGetError = createError("ValueGetError");
