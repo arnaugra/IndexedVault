@@ -1,7 +1,11 @@
+import useErrorStore, { ErrorsTypes, genericError } from "../stores/ErrorStore";
+import { createError } from "../utils/error";
 import { db } from "./db";
 import { SectionI } from "./interfaces";
 import { Model } from "./Model";
 import { Value } from "./Value";
+
+const { addError } = useErrorStore.getState();
 
 export class Section extends Model<SectionI, "id"> {
     constructor() {
@@ -9,8 +13,31 @@ export class Section extends Model<SectionI, "id"> {
     }
   
     static async create(section: Omit<SectionI, "id" | "values">) {
-      const id = await db.sections.add(section);
-      return { ...section, id };
+      try {
+        const existingSection = await db.sections.where("[projectId+name]").equals([section.projectId, section.name]).first();
+        if (existingSection) {
+          const project = await db.projects.get(section.projectId);
+          throw new SectionGetError(`Section with name "${section.name}" already exists in project "${project?.name}"`);
+        }
+
+        const id = await db.sections.add(section);
+        return { ...section, id };
+        
+      } catch (error) {
+        SectionGetError.errorIsInstanceOf(error, (error) => {
+          addError({
+            id: Math.random(),
+            message: error.message,
+            type: ErrorsTypes.error,
+            timestamp: Date.now()
+          });
+          throw error;
+        });
+
+        genericError("creating the section");
+        throw error;
+
+      }
     }
   
     static async getById(id: number, includeRelations: boolean = false) {
@@ -51,3 +78,5 @@ export class Section extends Model<SectionI, "id"> {
         return db.projects.count();
     }
   }
+
+const SectionGetError = createError("SectionGetError");
