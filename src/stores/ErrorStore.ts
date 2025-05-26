@@ -1,5 +1,7 @@
 import { create } from "zustand";
 
+// TODO: change the error naming to toast
+
 enum ErrorsTypes {
     info = "info",
     warning = "warning",
