@@ -134,4 +134,3 @@ export class Project extends Model<ProjectI, "id"> {
 }
 
 const ProjectGetError = createError("ProjectGetError");
-const ProjectCreateError = createError("ProjectCreateError");
