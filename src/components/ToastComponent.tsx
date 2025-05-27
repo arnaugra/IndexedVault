@@ -5,23 +5,23 @@ import ToastInfoIcon from "../svg/ToastInfoIcon";
 import ToastWarningIcon from "../svg/ToastWarningIcon";
 
 function ToastCompoennt() {
-    const errors = useToastStore((state) => state.toasts);
+    const toasts = useToastStore((state) => state.toasts);
 
     return (
         <>
             <div className="absolute max-md:left-3 bottom-3 md:bottom-10 right-3 md:right-10 flex flex-col items-end gap-3 z-50">
-                {errors.map((error) => (
-                    <ToastItem key={error.id} error={error} />
+                {toasts.map((toast) => (
+                    <ToastItem key={toast.id} toast={toast} />
                 ))}
             </div>
         </>
     );
 }
 
-function ToastItem({error}: {error: ToastType}) {
+function ToastItem({toast}: {toast: ToastType}) {
 
     const removeToast = useToastStore((state) => state.removeToast);
-    const { message, type, timestamp, id } = error;
+    const { message, type, timestamp, id } = toast;
 
     const maxToastTime = 1000 * 10; // 10 seconds
 
