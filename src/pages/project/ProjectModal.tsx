@@ -19,9 +19,8 @@ function ProjectModal (props: {project_id?: number}) {
 
     const [LocalProject, setLocalProject] = useState(projectBase);
 
-    const setProjects = useProjectsStore((state) => state.setProjects);
-    const setProjectName = useProjectStore((state) => state.setProjectName);
-    const setProjectDescription = useProjectStore((state) => state.setProjectDescription);
+    const { setProjects } = useProjectsStore();
+    const { setProjectName, setProjectDescription } = useProjectStore();
 
     useEffect(() => {
         if (!openNewProject) {

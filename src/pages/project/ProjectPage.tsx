@@ -20,12 +20,8 @@ function ProjectPage() {
     
     const { draggedItem, overItem, onDragStart, onDragEnd, onDragOver, onDrop, reorderItems } = useDragAndDrop<SectionI>();
 
-    const setProjectName = useProjectStore((state) => state.setProjectName);
-    const projectDescription = useProjectStore((state) => state.projectDescription);
-    const setProjectDescription = useProjectStore((state) => state.setProjectDescription);
-
-    const sections = useSectionsStore((state) => state.sections);
-    const setSections = useSectionsStore((state) => state.setSections);
+    const { setProjectName, projectDescription, setProjectDescription } = useProjectStore();
+    const { sections, setSections } = useSectionsStore();
 
     const handleReorder = (target: SectionI): React.DragEventHandler => {
         return onDrop(target, async (from, to) => {

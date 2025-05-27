@@ -17,12 +17,8 @@ function SectionPage () {
     const project_id = Number(match?.project_id);
     const section_id = Number(match?.section_id);
 
-    const setSectionName = useNewSectionStore((state) => state.setSectionName);
-
-    const sectionDescription = useNewSectionStore((state) => state.sectionDescription);
-    const setSectionDescription = useNewSectionStore((state) => state.setSectionDescription);
-
-    const setValues = useValuesStore((state) => state.setValues);
+    const { setSectionName, sectionDescription, setSectionDescription } = useNewSectionStore();
+    const { setValues } = useValuesStore();
 
     useEffect(() => {
         const fetchSection = async () => {

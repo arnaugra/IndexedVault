@@ -18,17 +18,13 @@ import DragIcon from "../../svg/DragIcon";
 
 function ValuesTable(props: {section_id: number}) {
 
-    const values = useValuesStore((state) => state.values);
-    const setValues = useValuesStore((state) => state.setValues);
+    const { values, setValues } = useValuesStore();
+    const { setValueIdToEdit, setOpenNewValue } = useValueStore();
+    const { encryptionKey } = useEncryptStore();
 
     const { draggedItem, overItem, onDragStart, onDragEnd, onDragOver, onDrop, reorderItems } = useDragAndDrop<ValueI>();
 
-    const setValueIdToEdit = useValueStore((state) => state.setValueIdToEdit);
-    const setOpenNewValue = useValueStore((state) => state.setOpenNewValue);
-
     const [valueIdToDelete, setValueIdToDelete] = useState<number | null>(null);
-
-    const encryptionKey = useEncryptStore((state) => state.encryptionKey);
 
     const handleReorder = (target: ValueI): React.DragEventHandler => {
         return onDrop(target, async (from, to) => {

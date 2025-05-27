@@ -20,16 +20,12 @@ function SideTree() {
     const project_id = Number(match?.project_id || matchSection?.project_id);
     const section_id = Number(matchSection?.section_id);
 
-    const tree = useSideTreeStore((state) => state.tree);
-    const setTree = useSideTreeStore((state) => state.setTree);
-
-    const projects = useProjectsStore((state) => state.projects);
-    const sections = useSectionsStore((state) => state.sections);
-    const projectName = useProjectStore((state) => state.projectName);
-    const projectDescription = useProjectStore((state) => state.projectDescription);
-    const sectionName = useSectionStore((state) => state.sectionName);
-    const sectionDescription = useSectionStore((state) => state.sectionDescription);
-    const values = useValuesStore((state) => state.values);
+    const { tree, setTree } = useSideTreeStore();
+    const { projects } = useProjectsStore();
+    const { sections } = useSectionsStore();
+    const { projectName, projectDescription } = useProjectStore();
+    const { sectionName, sectionDescription } = useSectionStore();
+    const { values } = useValuesStore();
 
     useEffect(() => {
         setTree();

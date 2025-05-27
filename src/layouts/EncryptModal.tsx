@@ -4,11 +4,7 @@ import ModalComponent from "../components/ModalComponent";
 
 function EncryptModal() {
 
-    const openModal = useEncryptStore((state) => state.openModal);
-    const setOpenModal = useEncryptStore((state) => state.setOpenModal);
-    const setEncryptionKey = useEncryptStore((state) => state.setEncryptionKey);
-    const saveEncryptionKey = useEncryptStore((state) => state.saveEncryptionKey);
-    const deleteEncryptionKey = useEncryptStore((state) => state.deleteEncryptionKey);
+    const { openModal, setOpenModal, setEncryptionKey, saveEncryptionKey, deleteEncryptionKey } = useEncryptStore();
 
     const [inputValue, setInputValue] = useState("");
     

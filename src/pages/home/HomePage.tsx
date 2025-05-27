@@ -12,8 +12,7 @@ function HomePage () {
 
   const { draggedItem, overItem, onDragStart, onDragEnd, onDragOver, onDrop, reorderItems } = useDragAndDrop<ProjectI>();
 
-  const projects = useProjectsStore((state) => state.projects);
-  const setProjects = useProjectsStore((state) => state.setProjects);
+  const { projects, setProjects } = useProjectsStore();
 
   const handleReorder = (target: ProjectI): React.DragEventHandler => {
     return onDrop(target, async (from, to) => {

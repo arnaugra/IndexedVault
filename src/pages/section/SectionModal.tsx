@@ -19,9 +19,8 @@ function SectionModal ({ project_id, section_id }: {project_id?: number, section
 
     const [LocalSection, setLocalSection] = useState(sectionBase);
 
-    const setSections = useSectionsStore((state) => state.setSections);
-    const setSectionName = useSectionStore((state) => state.setSectionName);
-    const setSectionDescription = useSectionStore((state) => state.setSectionDescription);
+    const { setSections } = useSectionsStore();
+    const { setSectionName, setSectionDescription } = useSectionStore();
 
     useEffect(() => {
         if (!openNewSection) {

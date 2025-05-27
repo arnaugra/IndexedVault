@@ -19,16 +19,11 @@ const valueBase = {
 }
 
 function ValueModal(props: {section_id: number}) {
-    const valueIdToEdit = useValueStore((state) => state.valueIdToEdit);
-
-    const openNewValue =useValueStore((state) => state.openNewValue);
-    const setOpenNewValue = useValueStore((state) => state.setOpenNewValue);
-    const setValueIdToEdit = useValueStore((state) => state.setValueIdToEdit);
+    const { valueIdToEdit, openNewValue, setOpenNewValue, setValueIdToEdit } = useValueStore();
+    const { setValues } = useValuesStore();
+    const { encryptionKey } = useEncryptStore();
 
     const [localValue, setLocalValue] = useState(valueBase);
-
-    const setValues = useValuesStore((state) => state.setValues);
-    const encryptionKey = useEncryptStore((state) => state.encryptionKey);
 
     const inputValue = useCallback( async (value: string, type: ValueTypes) => {
         if (type === ValueTypes.PASSWORD && encryptionKey) {

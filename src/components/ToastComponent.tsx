@@ -5,7 +5,7 @@ import ToastInfoIcon from "../svg/ToastInfoIcon";
 import ToastWarningIcon from "../svg/ToastWarningIcon";
 
 function ToastCompoennt() {
-    const toasts = useToastStore((state) => state.toasts);
+    const { toasts } = useToastStore();
 
     return (
         <>
@@ -20,7 +20,7 @@ function ToastCompoennt() {
 
 function ToastItem({toast}: {toast: ToastType}) {
 
-    const removeToast = useToastStore((state) => state.removeToast);
+    const { removeToast } = useToastStore();
     const { message, type, timestamp, id } = toast;
 
     const maxToastTime = 1000 * 10; // 10 seconds

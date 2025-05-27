@@ -16,11 +16,8 @@ interface BreadcrumbsComponentProps {
 function BreadcrumbsComponent(props: BreadcrumbsComponentProps) {
     const { project_id, section_id } = props;
 
-    const projectName = useProjectStore((state) => state.projectName);
-    const setProjectName = useProjectStore((state) => state.setProjectName);
-
-    const sectionName = useSectionStore((state) => state.sectionName);
-    const setSectionName = useSectionStore((state) => state.setSectionName);
+    const { projectName, setProjectName } = useProjectStore();
+    const { sectionName, setSectionName } = useSectionStore();
 
     useEffect(() => {
         const fetchProject = async () => {

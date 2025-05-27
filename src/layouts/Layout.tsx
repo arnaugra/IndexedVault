@@ -14,9 +14,7 @@ import GitHubIssueIcon from "../svg/GitHubIssueIcon";
 function AppLayout({ children }: { children: React.ReactNode }) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
-    const setOpenModalEncrypt = useEncryptStore((state) => state.setOpenModal);
-    const encryptionKey = useEncryptStore((state) => state.encryptionKey);
-    const loadEncryptionKey = useEncryptStore((state) => state.loadEncryptionKey);
+    const { setOpenModal, encryptionKey, loadEncryptionKey } = useEncryptStore();
 
     useEffect(() => {
         loadEncryptionKey();
@@ -61,7 +59,7 @@ function AppLayout({ children }: { children: React.ReactNode }) {
                 <div className="flex justify-evenly gap-4 px-4">
                     
                     <div className="tooltip flex items-center w-min" data-tip="Add Encryption Key">
-                        <button className="btn btn-circle btn-ghost" onClick={() => setOpenModalEncrypt(true)}>
+                        <button className="btn btn-circle btn-ghost" onClick={() => setOpenModal(true)}>
                             {encryptionKey ? <LockCloseIcon className="w-5 text-success" /> : <LockOpenIcon className="w-5 text-error" />}
                         </button>
                     </div>
