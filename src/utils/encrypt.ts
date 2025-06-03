@@ -27,7 +27,11 @@ export async function encrypt(text: string, password: string): Promise<string> {
     return btoa(String.fromCharCode(...encryptedBytes));
 }
 
-export async function decrypt(encrypted: string, password: string): Promise<string | undefined> {
+export async function decrypt(encrypted: string, password: string): Promise<
+    { ok:true, value: string} |
+    { ok: false, error: encryptErrors } |
+    undefined
+> {
     try {
         const data = Uint8Array.from(atob(encrypted), c => c.charCodeAt(0));
     
@@ -48,10 +52,14 @@ export async function decrypt(encrypted: string, password: string): Promise<stri
         );
     
         const decoder = new TextDecoder();
-        return decoder.decode(decryptedContent);
+        return {ok: true, value: decoder.decode(decryptedContent)};
     } catch (error) {
-        console.error(error);
         const addToast = useToastStore.getState().addToast;
+
+        if (error instanceof DOMException && error.name === "OperationError") {
+            return {ok: false, error: encryptErrors.DECRYPTION_FAILED};
+        }
+
         addToast({
             id: Math.random(),
             message: "Decryption failed. Please check your password.",
@@ -60,6 +68,11 @@ export async function decrypt(encrypted: string, password: string): Promise<stri
         });
         return undefined;
     }
+}
+
+export enum encryptErrors {
+    GENERIC_ERROR = 1,
+    DECRYPTION_FAILED = 2,
 }
 
 async function getKeyMaterial(password: string): Promise<CryptoKey> {
