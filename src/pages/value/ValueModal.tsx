@@ -5,7 +5,7 @@ import useEncryptStore from "../../stores/EncryptStore";
 import { Value } from "../../db/Value";
 import ModalComponent from "../../components/ModalComponent";
 import InputField from "../../components/InputField";
-import { decrypt, encrypt } from "../../utils/encrypt";
+import { decrypt, encrypt, encryptErrors } from "../../utils/encrypt";
 import EditIcon from "../../svg/EditIcon";
 
 const valueBase = {
@@ -16,6 +16,7 @@ const valueBase = {
     type: ValueTypes.TEXT,
     expirationDate: undefined as string | undefined,
     encryptionError: false,
+    encryptionKeyError: false,
 }
 
 function ValueModal(props: {section_id: number}) {
@@ -25,12 +26,18 @@ function ValueModal(props: {section_id: number}) {
 
     const [localValue, setLocalValue] = useState(valueBase);
 
-    const inputValue = useCallback( async (value: string, type: ValueTypes) => {
+    const inputValue = useCallback( async (value: string, type: ValueTypes): Promise<
+        { ok:true, value: string} |
+        { ok: false, error: encryptErrors }
+    > => {
         if (type === ValueTypes.PASSWORD && encryptionKey) {
             const decryptedValue = await decrypt(value, encryptionKey);
-            return decryptedValue ?? "";
+            
+            return decryptedValue === undefined
+                ? { ok: false, error: encryptErrors.DECRYPTION_FAILED }
+                : decryptedValue;
         }
-        return value;
+        return { ok: true, value };
     }, [encryptionKey]);
 
     useEffect(() => {
@@ -40,18 +47,17 @@ function ValueModal(props: {section_id: number}) {
         }
         const init = async () => {
             if (valueIdToEdit) {
-                await Value.getById(valueIdToEdit!).then(async (value) => {
-                    const finalValue = await inputValue(value?.value as string, value?.type as ValueTypes);
-                    setLocalValue({
-                        name: value?.name ?? "",
-                        nameError: false,
-                        value: finalValue,
-                        valueError: false,
-                        type: value?.type as ValueTypes ?? ValueTypes.TEXT,
-                        expirationDate: value?.expirationDate ?? undefined,
-                        encryptionError: false,
-                    });
-
+                const value = await Value.getById(valueIdToEdit!);
+                const finalValue = await inputValue(value?.value as string, value?.type as ValueTypes);
+                setLocalValue({
+                    name: value?.name ?? "",
+                    nameError: false,
+                    value: finalValue.ok ? finalValue.value : "",
+                    valueError: false,
+                    type: value?.type as ValueTypes ?? ValueTypes.TEXT,
+                    expirationDate: value?.expirationDate ?? undefined,
+                    encryptionError: false,
+                    encryptionKeyError: finalValue.ok === false && finalValue.error === encryptErrors.DECRYPTION_FAILED,
                 });
             }
         }
@@ -73,11 +79,18 @@ function ValueModal(props: {section_id: number}) {
     }
 
     const saveValue = async () => {
-        if (!localValue.name) setLocalValue((prev) => ({ ...prev, nameError: true }));
-        if (!localValue.value) setLocalValue((prev) => ({ ...prev, valueError: true }));
-        if (localValue.type === ValueTypes.PASSWORD && !encryptionKey) setLocalValue((prev) => ({ ...prev, encryptionError: true }));
+        const errors: Partial<typeof localValue> = {}
 
-        if (localValue.nameError || localValue.valueError || (localValue.type === ValueTypes.PASSWORD && localValue.encryptionError)) return;
+        if (!localValue.name) errors.nameError = true;
+        if (!localValue.value) errors.valueError = true;
+        if (localValue.type === ValueTypes.PASSWORD && encryptionKey === null) errors.encryptionError = true;
+
+        setLocalValue((prev) => ({
+            ...prev,
+            ...errors 
+        }));
+
+        if (Object.keys(errors).length > 0) return;
 
         let finalValue = localValue.value;
         if (localValue.type === ValueTypes.PASSWORD) {
@@ -140,10 +153,10 @@ function ValueModal(props: {section_id: number}) {
                 </div>
 
                 {localValue.encryptionError && (
-                    <p className="text-error">Encryption key is required for password values</p>
+                    <p className="text-error">Encryption key is required for password values.</p>
                 )}
                 
-                {localValue.encryptionError && (
+                {localValue.encryptionKeyError && (
                     <p className="text-error">Could not decrypt password. Please check your encryption key.</p>
                 )}
 
