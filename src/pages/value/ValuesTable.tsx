@@ -20,7 +20,7 @@ function ValuesTable(props: {section_id: number}) {
 
     const { values, setValues } = useValuesStore();
     const { setValueIdToEdit, setOpenNewValue } = useValueStore();
-    const { encryptionKey } = useEncryptStore();
+    const { setOpenModal, encryptionKey } = useEncryptStore();
 
     const { draggedItem, overItem, onDragStart, onDragEnd, onDragOver, onDrop, reorderItems } = useDragAndDrop<ValueI>();
 
@@ -120,9 +120,9 @@ function ValuesTable(props: {section_id: number}) {
                                                                 }}>
                                                                     <CopyIcon className="w-4 mt-1 cursor-pointer" />
                                                                 </button>)
-                                                            :   (<div className="btn btn-ghost btn-circle btn-xs tooltip" data-tip="Add Encryption Key">
+                                                            :   (<div className="btn btn-ghost btn-circle btn-xs tooltip" data-tip="Add Encryption Key" onClick={() => setOpenModal(true)}>
                                                                     <LockOpenIcon className="w-4 mt-1 text-error cursor-pointer" />
-                                                                    </div>)
+                                                                </div>)
                                                         }
                                                     </>,
 
