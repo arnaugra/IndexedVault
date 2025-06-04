@@ -114,7 +114,10 @@ function ValuesTable(props: {section_id: number}) {
                                                         <span>{value.value.substring(0,35)}{value.value.length > 35 ? "..." : ""}</span>
 
                                                         {encryptionKey
-                                                            ?   (<button className="btn btn-ghost btn-circle btn-xs" onClick={async () => navigator.clipboard.writeText(await decrypt(value.value as string, encryptionKey) as string)}>
+                                                            ?   (<button className="btn btn-ghost btn-circle btn-xs" onClick={async () => {
+                                                                    const decrypted = await decrypt(value.value as string, encryptionKey) 
+                                                                    if (decrypted && decrypted.ok) await navigator.clipboard.writeText(decrypted.value)
+                                                                }}>
                                                                     <CopyIcon className="w-4 mt-1 cursor-pointer" />
                                                                 </button>)
                                                             :   (<div className="btn btn-ghost btn-circle btn-xs tooltip" data-tip="Add Encryption Key">
