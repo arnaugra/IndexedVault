@@ -9,7 +9,7 @@ import ToastComponent from "../components/ToastComponent";
 import useEncryptStore from "../stores/EncryptStore";
 import LockCloseIcon from "../svg/LockCloseIcon";
 import LockOpenIcon from "../svg/LockOpenIcon";
-import GitHubIssueIcon from "../svg/GitHubIssueIcon";
+// import GitHubIssueIcon from "../svg/GitHubIssueIcon";
 
 function AppLayout({ children }: { children: React.ReactNode }) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -64,11 +64,12 @@ function AppLayout({ children }: { children: React.ReactNode }) {
                         </button>
                     </div>
 
-                    <div className="tooltip flex items-center w-min" data-tip="Create a GitHub Issue">
+                    {/* Actually, this is not used right now, but it could be useful in the future */}
+                    {/* <div className="tooltip flex items-center w-min" data-tip="Create a GitHub Issue">
                         <button className="btn btn-circle btn-ghost" onClick={() => open("https://github.com/arnaugra/IndexedVault/issues/new", "_blank", "noopener noreferrer")}>
                             <GitHubIssueIcon className="w-5" />
                         </button>
-                    </div>
+                    </div> */}
 
                     <div className="tooltip flex items-center w-min" data-tip="Change Theme">
                         <ThemeChanger />
