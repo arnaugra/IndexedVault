@@ -43,7 +43,7 @@ export class Config extends Model<ConfigI, "id"> {
     static async getByName(name: string) {
         try {
             const conf = await db.config.where("name").equals(name).first();
-            if (!conf) throw new ConfigGetError(`Configuration with name ${name} not found`);
+            // if (!conf) throw new ConfigGetError(`Configuration with name ${name} not found`); // if not found, just return undefined
             return conf;
 
         } catch (error) {

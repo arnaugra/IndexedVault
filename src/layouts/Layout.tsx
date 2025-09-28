@@ -9,16 +9,39 @@ import ToastComponent from "../components/ToastComponent";
 import useEncryptStore from "../stores/EncryptStore";
 import LockCloseIcon from "../svg/LockCloseIcon";
 import LockOpenIcon from "../svg/LockOpenIcon";
+import { uploadProject } from "../utils/downloadProject";
+import useToastStore, { ToastsTypes } from "../stores/ErrorStore";
+import useProjectsStore from "../stores/ProjectsStore";
 // import GitHubIssueIcon from "../svg/GitHubIssueIcon";
 
 function AppLayout({ children }: { children: React.ReactNode }) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
-
+    const { addToast } = useToastStore.getState()
+    const { setProjects } = useProjectsStore();
     const { setOpenModal, encryptionKey, loadEncryptionKey } = useEncryptStore();
 
     useEffect(() => {
         loadEncryptionKey();
     }, [loadEncryptionKey]);
+
+    const handleUploadProject: React.ChangeEventHandler<HTMLInputElement> = async (e) => {
+        const file = e.target.files?.[0];
+        if (!file) {
+            addToast({
+                id: Math.random(),
+                message: "No file selected",
+                type: ToastsTypes.error,
+                timestamp: Date.now()
+            })
+            return;
+        }
+        await uploadProject(file);
+        
+        setTimeout(() => {
+            // hacky, but it works
+            setProjects()
+        }, 100);
+    };
 
     return (
         <div className="grid h-dvh
@@ -70,6 +93,16 @@ function AppLayout({ children }: { children: React.ReactNode }) {
                             <GitHubIssueIcon className="w-5" />
                         </button>
                     </div> */}
+
+                    <div className="tooltip flex items-center w-min" data-tip="Import Project">
+                        {/* upload file */}
+                        <label htmlFor="upload-project" className="btn btn-circle btn-ghost cursor-pointer">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4-4m0 0L8 8m4-4v12" />
+                            </svg>
+                            <input type="file" id="upload-project" className="hidden" accept=".json,application/json" onChange={handleUploadProject} />
+                        </label>
+                    </div>
 
                     <div className="tooltip flex items-center w-min" data-tip="Change Theme">
                         <ThemeChanger />

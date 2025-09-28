@@ -4,12 +4,12 @@ import { ProjectI } from '../db/interfaces';
 
 interface ProjectsStore {
     projects: ProjectI[];
-    setProjects: () => void;
+    setProjects: () => Promise<void>;
 }
 
 const useProjectsStore = create<ProjectsStore>((set) => ({
     projects: [],
-    setProjects: async () => {
+    setProjects: async (): Promise<void> => {
         const projects = await Project.getAll(true);
         set({ projects });
     },
