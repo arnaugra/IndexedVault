@@ -15,8 +15,9 @@ import LockOpenIcon from "../../svg/LockOpenIcon";
 import { useDragAndDrop } from "../../hooks/useDragAndDrop";
 import { ValueI } from "../../db/interfaces";
 import DragIcon from "../../svg/DragIcon";
+import { UUID } from "../../types/fields";
 
-function ValuesTable(props: {section_id: number}) {
+function ValuesTable(props: {section_uuid: UUID}) {
 
     const { values, setValues } = useValuesStore();
     const { setValueIdToEdit, setOpenNewValue } = useValueStore();
@@ -28,19 +29,18 @@ function ValuesTable(props: {section_id: number}) {
 
     const handleReorder = (target: ValueI): React.DragEventHandler => {
         return onDrop(target, async (from, to) => {
-            
-            console.log("Dropped", from.id, "->", to.id);
+
             const updated = reorderItems(values, from, to);
             for (const value of updated) {
                 await new Value().update(value.id!, { order: value.order });
             }
-            setValues(props.section_id);
+            setValues(props.section_uuid);
         });
     };
 
-    const deleteValue = async (id: number) => {
-        await Value.delete(id);
-        setValues(props.section_id);
+    const deleteValue = async (uuid: UUID) => {
+        await Value.delete(uuid);
+        setValues(props.section_uuid);
         setValueIdToDelete(null);
     }
 
@@ -155,14 +155,14 @@ function ValuesTable(props: {section_id: number}) {
                                         </div>
                                     </article>
                                     <article role="cell" data-column={`value-${value.id}-actions`} className={`${colwidths[3]} flex gap-1 items-center`}>
-                                        <button className="btn btn-ghost btn-circle btn-xs" onClick={() => {setValueIdToEdit(value.id); setOpenNewValue(true)}}>
+                                        <button className="btn btn-ghost btn-circle btn-xs" onClick={() => {setValueIdToEdit(value.uuid); setOpenNewValue(true)}}>
                                             <EditIcon className="w-4" />
                                         </button>
                                         <button className="btn btn-ghost btn-circle btn-xs text-error" onClick={() => setValueIdToDelete(value.id!)}>
                                             <BinIcon className="w-4" />
                                         </button>
                                         {valueIdToDelete === value.id && (
-                                            <ConfirmModalComponent key={index} open={true} onConfirm={() => deleteValue(value.id as number)} onCancel={() => {setValueIdToDelete(null)}}>
+                                            <ConfirmModalComponent key={index} open={true} onConfirm={() => deleteValue(value.uuid!)} onCancel={() => {setValueIdToDelete(null)}}>
                                                 <p>You are about to delete this value.</p>
                                                 <p>This action cannot be undone.</p>
                                                 <p>Are you sure?</p>

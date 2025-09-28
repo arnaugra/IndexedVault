@@ -7,6 +7,7 @@ import ModalComponent from "../../components/ModalComponent";
 import InputField from "../../components/InputField";
 import { decrypt, encrypt, encryptErrors } from "../../utils/encrypt";
 import EditIcon from "../../svg/EditIcon";
+import { UUID } from "../../types/fields";
 
 const valueBase = {
     name: "",
@@ -19,7 +20,7 @@ const valueBase = {
     encryptionKeyError: false,
 }
 
-function ValueModal(props: {section_id: number}) {
+function ValueModal(props: {section_uuid: UUID}) {
     const { valueIdToEdit, openNewValue, setOpenNewValue, setValueIdToEdit } = useValueStore();
     const { setValues } = useValuesStore();
     const { encryptionKey } = useEncryptStore();
@@ -47,7 +48,7 @@ function ValueModal(props: {section_id: number}) {
         }
         const init = async () => {
             if (valueIdToEdit) {
-                const value = await Value.getById(valueIdToEdit!);
+                const value = await Value.getByUuid(valueIdToEdit!);
                 const finalValue = await inputValue(value?.value as string, value?.type as ValueTypes);
                 setLocalValue({
                     name: value?.name ?? "",
@@ -107,7 +108,8 @@ function ValueModal(props: {section_id: number}) {
             });
         } else {
             await Value.create({
-                sectionId: props.section_id,
+                sectionUUID: props.section_uuid,
+                sectionId: -1,
                 name: localValue.name,
                 value: finalValue,
                 type: localValue.type,
@@ -117,7 +119,7 @@ function ValueModal(props: {section_id: number}) {
         }
 
         setLocalValue(valueBase);
-        setValues(props.section_id);
+        setValues(props.section_uuid);
         setValueIdToEdit(undefined);
         setOpenNewValue(false);
     }

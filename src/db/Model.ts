@@ -1,4 +1,5 @@
 import { Table, UpdateSpec } from "dexie";
+import { UUID } from "../types/fields";
 
 export abstract class Model<T, K extends keyof T> {
   table: Table<T, NonNullable<T[K]>>;
@@ -9,6 +10,10 @@ export abstract class Model<T, K extends keyof T> {
 
   async getById(id: NonNullable<T[K]>): Promise<T | undefined> {
     return this.table.get(id);
+  }
+
+  async getByUuid(uuid: UUID): Promise<T | undefined> {
+    return this.table.where("uuid").equals(uuid).first();
   }
 
   async getAll(): Promise<T[]> {

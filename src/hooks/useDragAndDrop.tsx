@@ -1,8 +1,9 @@
 import { useState } from 'react';
+import { UUID } from '../types/fields';
 
-type withId = { id?: string | number };
+type withUUID = { uuid?: UUID };
 
-export type UseDragAndDropReturn<T extends withId> = {
+export type UseDragAndDropReturn<T extends withUUID> = {
     draggedItem: T | null;
     overItem: T | null;
     onDragStart: (item: T) => React.DragEventHandler;
@@ -12,7 +13,7 @@ export type UseDragAndDropReturn<T extends withId> = {
     reorderItems: (items: T[], from: T, to: T) => T[];
 };
 
-export function useDragAndDrop<T extends withId>(): UseDragAndDropReturn<T> {
+export function useDragAndDrop<T extends withUUID>(): UseDragAndDropReturn<T> {
     const [draggedItem, setDraggedItem] = useState<T | null>(null);
     const [overItem, setOverItem] = useState<T | null>(null);
 
@@ -37,8 +38,8 @@ export function useDragAndDrop<T extends withId>(): UseDragAndDropReturn<T> {
     };
     
     const reorderItems = (items: T[], from: T, to: T): T[] => {
-        const fromIndex = items.findIndex(i => i.id === from.id);
-        const toIndex = items.findIndex(i => i.id === to.id);
+        const fromIndex = items.findIndex(i => i.uuid === from.uuid);
+        const toIndex = items.findIndex(i => i.uuid === to.uuid);
         const updated = [...items];
         const [moved] = updated.splice(fromIndex, 1);
         updated.splice(toIndex, 0, moved);

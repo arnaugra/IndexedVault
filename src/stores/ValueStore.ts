@@ -1,10 +1,11 @@
 import { create } from 'zustand';
+import { UUID } from '../types/fields';
 
 interface ValueStore {
     openNewValue: boolean;
     setOpenNewValue: (open: boolean) => void;
-    valueIdToEdit?: number;
-    setValueIdToEdit: (id: number | undefined) => void;
+    valueIdToEdit?: UUID;
+    setValueIdToEdit: (id: UUID | undefined) => void;
 }
 
 enum ValueTypes {

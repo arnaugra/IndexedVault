@@ -7,6 +7,7 @@ import { useDragAndDrop } from "../../hooks/useDragAndDrop";
 import { ProjectI } from "../../db/interfaces";
 import { Project } from "../../db/Project";
 import DragIcon from "../../svg/DragIcon";
+import { UUID } from "../../types/fields";
 
 function HomePage () {
 
@@ -31,10 +32,10 @@ function HomePage () {
   }
   , [setProjects]);
 
-  const getOnDraggingClass = (projectId: number): string | undefined => {
+  const getOnDraggingClass = (projectUUID: UUID): string | undefined => {
     if (!draggedItem) return;
-    if (draggedItem.id === projectId) return 'dragging';
-    if (overItem?.id === projectId) return 'dragging-over';
+    if (draggedItem.uuid === projectUUID) return 'dragging';
+    if (overItem?.uuid === projectUUID) return 'dragging-over';
     return 'not-dragging';
   };
 
@@ -50,7 +51,7 @@ function HomePage () {
         {projects.length === 0
           ? <p className="text-gray-600">No projects found.</p>
           : projects.map((project) => (
-            <Link href={ "/project/" + project.id } key={ project.id } className={`card bg-base-200 border-base-300 rounded-box w-full h-full border p-4 ${getOnDraggingClass(project.id as number)}`}
+            <Link href={ "/project/" + project.uuid } key={ project.uuid } className={`card bg-base-200 border-base-300 rounded-box w-full h-full border p-4 ${getOnDraggingClass(project.uuid!)}`}
             onDrop={ handleReorder(project) } 
             onDragEnd={ onDragEnd }
             onDragOver={ onDragOver(project) }

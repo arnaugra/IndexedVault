@@ -13,8 +13,8 @@ function App() {
       <Router>
         <Switch>
           <Route path="/" component={HomePage} />
-          <Route path="/project/:project_id" component={ProjectPage} />
-          <Route path="/project/:project_id/section/:section_id" component={SectionPage} />
+          <Route path="/project/:project_uuid" component={ProjectPage} />
+          <Route path="/project/:project_uuid/section/:section_uuid" component={SectionPage} />
           <Route path="*" component={Page404} />
         </Switch>
       </Router>

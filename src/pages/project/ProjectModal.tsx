@@ -6,6 +6,7 @@ import EditIcon from "../../svg/EditIcon";
 import { Project } from "../../db/Project";
 import useProjectsStore from "../../stores/ProjectsStore";
 import useProjectStore from "../../stores/ProjectStore";
+import { UUID } from "../../types/fields";
 
 const projectBase = {
     name: "",
@@ -13,8 +14,8 @@ const projectBase = {
     description: "",
 }
 
-function ProjectModal (props: {project_id?: number}) {
-    const edit = props.project_id !== undefined;
+function ProjectModal (props: {project_uuid?: UUID}) {
+    const edit = props.project_uuid !== undefined;
     const [openNewProject, setOpenNewProject] = useState(false);
 
     const [LocalProject, setLocalProject] = useState(projectBase);
@@ -29,7 +30,7 @@ function ProjectModal (props: {project_id?: number}) {
         }
         const init = async () => {
             if (edit) {
-                await Project.getById(props.project_id!).then((project) => {
+                await Project.getByUuid(props.project_uuid!).then((project) => {
                     setLocalProject({
                         name: project?.name ?? "",
                         nameError: false,
@@ -41,7 +42,7 @@ function ProjectModal (props: {project_id?: number}) {
 
         init();
     }, [openNewProject,
-        edit, props.project_id,
+        edit, props.project_uuid,
     ]);
 
     const handleProjectInput = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -56,7 +57,7 @@ function ProjectModal (props: {project_id?: number}) {
         }
 
         if (edit) {
-            await Project.update(props.project_id!, {
+            await Project.update(props.project_uuid!, {
                 name: LocalProject.name,
                 description: LocalProject.description,
             });

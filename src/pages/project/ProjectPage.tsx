@@ -12,12 +12,15 @@ import { useDragAndDrop } from "../../hooks/useDragAndDrop";
 import { SectionI } from "../../db/interfaces";
 import { Section } from "../../db/Section";
 import DragIcon from "../../svg/DragIcon";
+import { UUID } from "../../types/fields";
+import DownloadIcon from "../../svg/DownloadIcon";
+import { downloadProject } from "../../utils/downloadProject";
 
 function ProjectPage() {
     const [, navigate] = useLocation();
-    const match = useRoute<{project_id: string}>("/project/:project_id")[1];
-    const project_id = Number(match?.project_id);
-    
+    const match = useRoute<{project_uuid: string}>("/project/:project_uuid")[1];
+    const project_uuid = match?.project_uuid as UUID;
+
     const { draggedItem, overItem, onDragStart, onDragEnd, onDragOver, onDrop, reorderItems } = useDragAndDrop<SectionI>();
 
     const { setProjectName, projectDescription, setProjectDescription } = useProjectStore();
@@ -29,13 +32,13 @@ function ProjectPage() {
             for (const section of updated) {
                 await new Section().update(section.id!, { order: section.order });
             }
-            setSections(project_id);
+            setSections(project_uuid);
         });
     };
 
     useEffect(() => {
         const fetchProject = async () => {
-            const pageProject = await Project.getById(project_id);
+            const pageProject = await Project.getByUuid(project_uuid!);
 
             if (pageProject) {
                 setProjectName(pageProject.name);
@@ -48,19 +51,19 @@ function ProjectPage() {
             
         }
         fetchProject();
-        setSections(project_id);
-    }, [project_id, setSections, setProjectName, setProjectDescription, navigate]);
+        setSections(project_uuid);
+    }, [project_uuid, setSections, setProjectName, setProjectDescription, navigate]);
 
     const [openConfirmationModal, setOpenConfirmationModal] = useState(false);
     const deleteProject = async () => {
-        await Project.delete(project_id);
+        await Project.delete(project_uuid);
         navigate("/");
     };
 
-    const getOnDraggingClass = (projectId: number): string | undefined => {
+    const getOnDraggingClass = (projectUUID : UUID): string | undefined => {
         if (!draggedItem) return;
-        if (draggedItem.id === projectId) return 'dragging';
-        if (overItem?.id === projectId) return 'dragging-over';
+        if (draggedItem.uuid === projectUUID) return 'dragging';
+        if (overItem?.uuid === projectUUID) return 'dragging-over';
         return 'not-dragging';
     };
 
@@ -70,23 +73,35 @@ function ProjectPage() {
             <div className="flex justify-between items-center w-full">
 
                 <div className="w-5/8">
-                    <BreadcrumbsComponent project_id={project_id}/>
+                    <BreadcrumbsComponent project_uuid={project_uuid}/>
                 </div>
 
                 <div className="flex gap-2 shrink-0">
-                    <ProjectModal project_id={project_id} />
-                    <button className="btn btn-sm btn-error" onClick={() => setOpenConfirmationModal(!openConfirmationModal)}><BinIcon className="w-4" /> <span className="hidden @md/layout:block">Delete project</span></button>
+
+                    <button className="btn btn-sm btn-warning" onClick={() => downloadProject(project_uuid)}>
+                        <DownloadIcon className="w-4" />
+                        {/* <span className="hidden @md/layout:block">Download project</span> */}
+                    </button>
+
+                    <ProjectModal project_uuid={project_uuid} />
+
+                    <button className="btn btn-sm btn-error" onClick={() => setOpenConfirmationModal(!openConfirmationModal)}>
+                        <BinIcon className="w-4" />
+                        <span className="hidden @md/layout:block">Delete project</span>
+                    </button>
+
                     <ConfirmModalComponent open={openConfirmationModal} onConfirm={deleteProject} onCancel={() => setOpenConfirmationModal(false)}>
                         <p>You are about to delete this project.</p>
                         <p>All its sections and values will be permanently deleted. This action connot be undone.</p>
                         <p>Are you sure?</p>
                     </ConfirmModalComponent>
+
                 </div>
             </div>
             {projectDescription && <p className="text-gray-600 mt-1 whitespace-pre-line">{projectDescription}</p>}
             <div className="divider m-0"></div>
             <span>
-                <SectionModal project_id={project_id} />
+                <SectionModal project_uuid={project_uuid} />
             </span>
         </article>
         <article className="content">
@@ -94,7 +109,7 @@ function ProjectPage() {
             {sections.length === 0
                 ? <p className="text-gray-600">No sections found.</p>
                 : sections.map((section) => (
-                    <Link href={`/project/${project_id}/section/${section.id}`} key={section.id} className={`card bg-base-200 border-base-300 rounded-box w-full h-full border p-4 ${getOnDraggingClass(section.id as number)}`}
+                    <Link href={`/project/${project_uuid}/section/${section.uuid}`} key={section.uuid} className={`card bg-base-200 border-base-300 rounded-box w-full h-full border p-4 ${getOnDraggingClass(section.uuid!)}`}
                         onDrop={ handleReorder(section) } 
                         onDragEnd={ onDragEnd }
                         onDragOver={ onDragOver(section) }

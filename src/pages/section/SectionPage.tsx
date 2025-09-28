@@ -10,20 +10,21 @@ import BinIcon from "../../svg/BinIcon";
 import ValueModal from "../value/ValueModal";
 import ValuesTable from "../value/ValuesTable";
 import BreadcrumbsComponent from "../../components/BreadcrumbsComponent";
+import { UUID } from "../../types/fields";
 
 function SectionPage () {
     const [, navigate] = useLocation();
-    const match = useRoute<{project_id: string, section_id: string}>("/project/:project_id/section/:section_id")[1];
-    const project_id = Number(match?.project_id);
-    const section_id = Number(match?.section_id);
+    const match = useRoute<{project_uuid: string, section_uuid: string}>("/project/:project_uuid/section/:section_uuid")[1];
+    const project_uuid = match?.project_uuid as UUID;
+    const section_uuid = match?.section_uuid as UUID;
 
     const { setSectionName, sectionDescription, setSectionDescription } = useNewSectionStore();
     const { setValues } = useValuesStore();
 
     useEffect(() => {
         const fetchSection = async () => {
-            const pageProject = await Project.getById(project_id);
-            const pageSection = await Section.getById(section_id);
+            const pageProject = await Project.getByUuid(project_uuid);
+            const pageSection = await Section.getByUuid(section_uuid);
             if (pageProject && pageSection) {
                 setSectionName(pageSection.name);
                 setSectionDescription(pageSection.description);
@@ -34,14 +35,14 @@ function SectionPage () {
             }
         }
         fetchSection();
-        setValues(section_id);
+        setValues(section_uuid);
 
-    }, [navigate, section_id, project_id, setSectionDescription, setSectionName, setValues]);
+    }, [navigate, section_uuid, project_uuid, setSectionDescription, setSectionName, setValues]);
 
     const [openConfirmationModal, setOpenConfirmationModal] = useState(false);
     const deleteProject = async () => {
-        await Section.delete(section_id);
-        navigate("/project/" + project_id);
+        await Section.delete(section_uuid);
+        navigate("/project/" + project_uuid);
     }
 
   return (
@@ -50,11 +51,11 @@ function SectionPage () {
             <div className="flex justify-between items-center w-full">
 
                 <div className="w-5/8">
-                    <BreadcrumbsComponent section_id={section_id} project_id={project_id}/>
+                    <BreadcrumbsComponent section_uuid={section_uuid} project_uuid={project_uuid}/>
                 </div>
 
                 <div className="flex gap-2 shrink-0">
-                    <SectionModal section_id={section_id} />
+                    <SectionModal section_uuid={section_uuid} />
                     <button className="btn btn-sm btn-error" onClick={() => setOpenConfirmationModal(!openConfirmationModal)}><BinIcon className="w-4" /> <span className="hidden @md/layout:block">Delete project</span></button>
                     <ConfirmModalComponent open={openConfirmationModal} onConfirm={deleteProject} onCancel={() => setOpenConfirmationModal(false)}>
                         <p>You are about to delete this section.</p>
@@ -66,11 +67,11 @@ function SectionPage () {
             {sectionDescription && <p className="text-gray-600 mt-1 whitespace-pre-line">{sectionDescription}</p>}
             <div className="divider m-0"></div>
             <span>
-                <ValueModal section_id={section_id} />
+                <ValueModal section_uuid={section_uuid} />
             </span>
         </article>
         <article className="overflow-x-auto">
-            <ValuesTable section_id={section_id} />
+            <ValuesTable section_uuid={section_uuid} />
         </article>
     </section>
   );

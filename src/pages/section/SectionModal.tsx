@@ -6,6 +6,7 @@ import EditIcon from "../../svg/EditIcon";
 import { Section } from "../../db/Section";
 import useSectionsStore from "../../stores/SectionsStore";
 import useSectionStore from "../../stores/SectionStore";
+import { UUID } from "../../types/fields";
 
 const sectionBase = {
     name: "",
@@ -13,8 +14,8 @@ const sectionBase = {
     description: "",
 }
 
-function SectionModal ({ project_id, section_id }: {project_id?: number, section_id?: number}) {
-    const edit = section_id !== undefined;
+function SectionModal ({ project_uuid, section_uuid }: {project_uuid?: UUID, section_uuid?: UUID}) {
+    const edit = section_uuid !== undefined;
     const [openNewSection, setOpenNewSection] = useState(false);
 
     const [LocalSection, setLocalSection] = useState(sectionBase);
@@ -29,7 +30,7 @@ function SectionModal ({ project_id, section_id }: {project_id?: number, section
         }
         const init = async () => {
             if (edit) {
-                await Section.getById(section_id!).then((section) => {
+                await Section.getByUuid(section_uuid!).then((section) => {
                     setLocalSection({
                         name: section?.name ?? "",
                         nameError: false,
@@ -41,7 +42,7 @@ function SectionModal ({ project_id, section_id }: {project_id?: number, section
 
         init();
     }, [openNewSection,
-        edit, section_id
+        edit, section_uuid
     ]);
 
     const handleSectionInput = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -56,25 +57,25 @@ function SectionModal ({ project_id, section_id }: {project_id?: number, section
         }
 
         if (edit) {
-            await Section.update(section_id!, {
+            await Section.update(section_uuid!, {
                 name: LocalSection.name,
                 description: LocalSection.description,
             });
             setSectionName(LocalSection.name);
             setSectionDescription(LocalSection.description);
         } else {
-            if (project_id) {
+            if (project_uuid) {
                 await Section.create({
                     name: LocalSection.name,
                     description: LocalSection.description,
-                    projectId: project_id,
+                    projectId: -1,
+                    projectUUID: project_uuid,
                     order: await Section.count() + 1,
                 });
             }
         }
 
-        console.log(project_id);
-        if (project_id) setSections(project_id);
+        if (project_uuid) setSections(project_uuid);
         setLocalSection(sectionBase);
         setOpenNewSection(false);
 

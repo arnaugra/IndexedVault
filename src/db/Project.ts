@@ -1,4 +1,5 @@
 import useToastStore, { ToastsTypes, genericError } from "../stores/ErrorStore";
+import { UUID } from "../types/fields";
 import { createError } from "../utils/error";
 import { db } from "./db";
 import { ProjectI } from "./interfaces";
@@ -15,6 +16,11 @@ export class Project extends Model<ProjectI, "id"> {
         try {
             const existingProject = await db.projects.where("name").equals(project.name).first();
             if (existingProject) throw new ProjectGetError(`Project with name ${project.name} already exists`);
+
+            project = {
+                ...project,
+                uuid: crypto.randomUUID()
+            }
 
             const id = await db.projects.add(project);
 
@@ -48,7 +54,7 @@ export class Project extends Model<ProjectI, "id"> {
             const project = await db.projects.get(id);
             if (!project) throw new ProjectGetError(`Project with id ${id} not found`);
 
-            if (includeRelations) project.sections = await Section.getAllForProject(project.id!, includeRelations);
+            if (includeRelations) project.sections = await Section.getAllForProject(project.uuid!, includeRelations);
             return project;
 
         } catch (error) {
@@ -68,6 +74,30 @@ export class Project extends Model<ProjectI, "id"> {
         }
     }
 
+    static async getByUuid(uuid: UUID, includeRelations: boolean = false) {
+        try {
+            const project = await db.projects.where("uuid").equals(uuid).first();
+            if (!project) throw new ProjectGetError(`Project with uuid ${uuid} not found`);
+
+            if (includeRelations) project.sections = await Section.getAllForProject(project.uuid!, includeRelations);
+            return project;
+
+        } catch (error) {
+            ProjectGetError.errorIsInstanceOf(error, (error) => {
+                addToast({
+                    id: Math.random(),
+                    message: error.message,
+                    type: ToastsTypes.error,
+                    timestamp: Date.now()
+                });
+                throw error;
+            });
+
+            genericError("fetching the project");
+            throw error;
+        }
+    }
+
     static async getAll(includeRelations: boolean = false) {
         try {
             const projects = await db.projects.toArray();
@@ -76,7 +106,7 @@ export class Project extends Model<ProjectI, "id"> {
             projects.sort((a, b) => (a.order) - (b.order));
             if (includeRelations) {
                 for (const project of projects) {
-                    project.sections = await Section.getAllForProject(project.id!, includeRelations);
+                    project.sections = await Section.getAllForProject(project.uuid!, includeRelations);
                 }
             }
             return projects;
@@ -99,11 +129,14 @@ export class Project extends Model<ProjectI, "id"> {
         }
     }
 
-    static async update(id: number, updates: Partial<ProjectI>) {
+    static async update(uuid: UUID, updates: Partial<ProjectI>) {
         try {
+            const project = await db.projects.where("uuid").equals(uuid).first();
+            if (!project) throw new ProjectGetError(`Project with uuid ${uuid} not found`);
+            
             const updateData = { ...updates };
             delete updateData.sections;
-            await db.projects.update(id, updateData);
+            await db.projects.update(project.id!, updateData);
 
             addToast({
                 id: Math.random(),
@@ -112,8 +145,8 @@ export class Project extends Model<ProjectI, "id"> {
                 timestamp: Date.now()
             });
 
-            return this.getById(id);
-            
+            return this.getByUuid(project.uuid!);
+
         } catch (error) {
             genericError("updating the project");
             throw error;
@@ -121,11 +154,15 @@ export class Project extends Model<ProjectI, "id"> {
         }
     }
 
-    static async delete(id: number) {
+    static async delete(uuid: UUID) {
         try {
-            const sectionIds = (await db.sections.where("projectId").equals(id).primaryKeys()) as number[];
-            for (const sid of sectionIds) {
-                await db.sections.delete(sid);
+            const project = await db.projects.where("uuid").equals(uuid).first();
+            if (!project) throw new ProjectGetError(`Project not found`);
+            
+            // Deleting all sections and values
+            const sections = await db.sections.where("projectUUID").equals(project.uuid!).toArray(); //obtener los uuids
+            for (const section of sections) {
+                await db.sections.delete(section.id!);
             }
 
             addToast({
@@ -135,7 +172,7 @@ export class Project extends Model<ProjectI, "id"> {
                 timestamp: Date.now()
             });
 
-            return db.projects.delete(id);
+            return db.projects.delete(project.id!);
 
         } catch (error) {
             genericError("deleting the project");

@@ -1,8 +1,10 @@
 import useToastStore, { ToastsTypes, genericError } from "../stores/ErrorStore";
+import { UUID } from "../types/fields";
 import { createError } from "../utils/error";
 import { db } from "./db";
 import { ValueI } from "./interfaces";
 import { Model } from "./Model";
+import { Section } from "./Section";
 
 const { addToast } = useToastStore.getState();
 
@@ -13,8 +15,17 @@ export class Value extends Model<ValueI, "id"> {
   
     static async create(value: Omit<ValueI, "id">) {
         try {
-            const existingValue = await db.values.where("[sectionId+name]").equals([value.sectionId, value.name]).first();
-            if (existingValue) throw new ValueGetError(`Value with name "${value.name}" already exists in section with ID ${value.sectionId}`);
+            const existingValue = await db.values.where("[sectionUUID+name]").equals([value.sectionUUID!, value.name]).first();
+            const section = await Section.getByUuid(value.sectionUUID!);
+            if (existingValue) {
+                throw new ValueGetError(`Value with name "${value.name}" already exists in section ${section.name}`);
+            }
+
+            value = {
+                ...value,
+                sectionId: section?.id!,
+                uuid: crypto.randomUUID()
+            }
 
             const id = await db.values.add(value);
 
@@ -64,13 +75,35 @@ export class Value extends Model<ValueI, "id"> {
             
         }
     }
-  
-    static async getAllForSection(sectionId: number) {
-        try {
-            const section = await db.sections.get(sectionId);
-            if (!section) throw new ValueGetError(`Section with id ${sectionId} not found`);
 
-            const values = await db.values.where("sectionId").equals(sectionId).toArray();
+    static async getByUuid(uuid: UUID) {
+        try {
+            const value = await db.values.where("uuid").equals(uuid).first();
+            if (!value) throw new ValueGetError(`Value not found`);
+            return value;
+        } catch (error) {
+            ValueGetError.errorIsInstanceOf(error, (error) => {
+                addToast({
+                    id: Math.random(),
+                    message: error.message,
+                    type: ToastsTypes.error,
+                    timestamp: Date.now()
+                });
+                throw error;
+            });
+
+            genericError("fetching the value");
+            throw error;
+
+        }
+    }
+
+    static async getAllForSection(sectionUUID: UUID) {
+        try {
+            const section = await db.sections.where("uuid").equals(sectionUUID).first();
+            if (!section) throw new ValueGetError(`Section with uuid ${sectionUUID} not found`);
+
+            const values = await db.values.where("sectionUUID").equals(section.uuid!).toArray();
             values.sort((a, b) => (a.order) - (b.order));
 
             return values;
@@ -90,10 +123,13 @@ export class Value extends Model<ValueI, "id"> {
             
         }
     }
-  
-    static async update(id: number, updates: Partial<ValueI>) {
+
+    static async update(uuid: UUID, updates: Partial<ValueI>) {
         try {
-            await db.values.update(id, updates);
+            const value = await db.values.where("uuid").equals(uuid).first();
+            if (!value) throw new ValueGetError(`Value with uuid ${uuid} not found`);
+
+            await db.values.update(value.id!, updates);
 
             addToast({
                 id: Math.random(),
@@ -102,17 +138,20 @@ export class Value extends Model<ValueI, "id"> {
                 timestamp: Date.now()
             });
 
-            return db.values.get(id);
-            
+            return this.getByUuid(value.uuid!);
+
         } catch (error) {
             genericError("updating the value");
             throw error;
 
         }
     }
-  
-    static async delete(id: number) {
+
+    static async delete(uuid: UUID) {
         try {
+            const value = await db.values.where("uuid").equals(uuid).first();
+            if (!value) throw new ValueGetError(`Value not found`);
+
             addToast({
                 id: Math.random(),
                 message: "Value deleted successfully",
@@ -120,8 +159,7 @@ export class Value extends Model<ValueI, "id"> {
                 timestamp: Date.now()
             });
 
-            return db.values.delete(id);
-            
+            return db.values.delete(value.id!);
         } catch (error) {
             genericError("deleting the value");
             throw error;
