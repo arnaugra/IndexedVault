@@ -162,6 +162,11 @@ export class Project extends Model<ProjectI, "id"> {
             // Deleting all sections and values
             const sections = await db.sections.where("projectUUID").equals(project.uuid!).toArray(); //obtener los uuids
             for (const section of sections) {
+                const values = await db.values.where("sectionUUID").equals(section.uuid!).toArray();
+                for (const value of values) {
+                    await db.values.delete(value.id!);
+                }
+
                 await db.sections.delete(section.id!);
             }
 
