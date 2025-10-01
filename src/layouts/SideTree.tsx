@@ -15,10 +15,10 @@ import { ValueTypes } from "../stores/ValueStore";
 
 function SideTree() {
     const [location] = useLocation();
-    const match = useRoute<{project_id: string}>("/project/:project_id")[1];
-    const matchSection = useRoute<{project_id: string, section_id: string}>("/project/:project_id/section/:section_id")[1];
-    const project_id = Number(match?.project_id || matchSection?.project_id);
-    const section_id = Number(matchSection?.section_id);
+    const match = useRoute<{project_uuid: string}>("/project/:project_uuid")[1];
+    const matchSection = useRoute<{project_uuid: string, section_uuid: string}>("/project/:project_uuid/section/:section_uuid")[1];
+    const project_uuid = match?.project_uuid || matchSection?.project_uuid;
+    const section_uuid = matchSection?.section_uuid;
 
     const { tree, setTree } = useSideTreeStore();
     const { projects } = useProjectsStore();
@@ -40,15 +40,16 @@ function SideTree() {
   return (
     <ul className="menu w-full overflow-y-auto pr-0">
         <li>
+        {/* Projects */}
         {tree.length === 0
             ?   <span className="flex gap-2 items-center pointer-events-none italic">
                     No projects found
                 </span>
             :   tree.map((project) => (
-                    <details key={project.id} open={project.id === Number(project_id)}>
-                        <summary className={location === `/project/${project.id}` ? "menu-hover rounded" : ""}>
+                    <details key={project.uuid} open={project.uuid === project_uuid}>
+                        <summary className={location === `/project/${project.uuid}` ? "menu-hover rounded" : ""}>
 
-                            <Link href={`/project/${project.id}`} className={(active) => (active ? "active-link-menu" : "")}>
+                            <Link href={`/project/${project.uuid}`} className={(active) => (active ? "active-link-menu" : "")}>
                                 <span className="flex gap-2 items-center select-all">
                                     <FolderIcon className="w-3 shrink-0" /> <p className="line-clamp-1">{project.name}</p>
                                 </span>
@@ -57,6 +58,7 @@ function SideTree() {
                         </summary>
                         {project.description && <p className="text-xs text-gray-500 whitespace-pre-wrap py-2 px-4">{project.description}</p>}
                         <ul>
+                            {/* Sections */}
                             {project.sections?.length === 0
                                 ? <li className="menu-hover rounded">
                                     <span className="flex gap-2 items-center pointer-events-none italic">
@@ -65,10 +67,10 @@ function SideTree() {
                                 </li>
                                 : project.sections?.map((section) => (
                                     <li key={`${project.id}-${section.id}`} className={location === `/project/${project.id}/section/${section.id}` ? "menu-hover rounded" : ""}>
-                                        <details key={section.id} open={section.id === Number(section_id)}>
+                                        <details key={section.id} open={section.id === section_uuid}>
                                             <summary className={location === `/project/${project.id}` ? "menu-hover rounded" : ""}>
 
-                                                <Link href={`/project/${project.id}/section/${section.id}`} className={(active) => (active ? "active-link-menu" : "")}>
+                                                <Link href={`/project/${project.uuid}/section/${section.uuid}`} className={(active) => (active ? "active-link-menu" : "")}>
                                                     <span className="flex gap-2 items-center select-all">
                                                         <FileIcon className="w-3 shrink-0" /> <p className="line-clamp-1">{section.name}</p>
                                                     </span>
@@ -78,6 +80,7 @@ function SideTree() {
                                             {section.description && <p className="text-xs text-gray-500 whitespace-pre-wrap py-2 px-4">{section.description}</p>}
                                             {location !== `/project/${project.id}/section/${section.id}` &&
                                                 <ul className="ml-4 pb-5">
+                                                    {/* Values */}
                                                     {section.values?.length === 0
                                                         ? <li className="menu-hover rounded">
                                                             <span className="flex gap-2 items-center pointer-events-none italic">
