@@ -29,8 +29,14 @@ function ToastItem({toast}: {toast: ToastType}) {
         removeToast(id);
     }, (timestamp + maxToastTime) - timestamp);
 
+    const typeClass = {
+        [ToastsTypes.info]: "alert-info",
+        [ToastsTypes.warning]: "alert-warning",
+        [ToastsTypes.error]: "alert-error",
+    }[type];
+
     return (
-        <div role="alert" className={`alert alert-${type} w-full md:max-w-96 md:w-auto`}>
+        <div role="alert" className={`alert ${typeClass} w-full md:max-w-96 md:w-auto`}>
             {{
                 [ToastsTypes.info]: <ToastInfoIcon className="w-6" />,
                 [ToastsTypes.warning]: <ToastWarningIcon className="w-6" />,
