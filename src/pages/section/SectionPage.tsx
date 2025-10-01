@@ -11,6 +11,7 @@ import ValueModal from "../value/ValueModal";
 import ValuesTable from "../value/ValuesTable";
 import BreadcrumbsComponent from "../../components/BreadcrumbsComponent";
 import { UUID } from "../../types/fields";
+import useProjectStore from "../../stores/ProjectStore";
 
 function SectionPage () {
     const [, navigate] = useLocation();
@@ -18,25 +19,37 @@ function SectionPage () {
     const project_uuid = match?.project_uuid as UUID;
     const section_uuid = match?.section_uuid as UUID;
 
-    const { setSectionName, sectionDescription, setSectionDescription } = useNewSectionStore();
+    const { setSectionName, sectionDescription, setSectionDescription, setSectionUuid } = useNewSectionStore();
+    const { setProjectName, setProjectDescription, setProjectUuid } = useProjectStore();
     const { setValues } = useValuesStore();
 
     useEffect(() => {
         const fetchSection = async () => {
-            const pageProject = await Project.getByUuid(project_uuid);
-            const pageSection = await Section.getByUuid(section_uuid);
-            if (pageProject && pageSection) {
-                setSectionName(pageSection.name);
-                setSectionDescription(pageSection.description);
-                document.title = `IndexedVault | ${pageProject.name} / ${pageSection.name}`;
+            try {
+                const pageProject = await Project.getByUuid(project_uuid);
+                const pageSection = await Section.getByUuid(section_uuid);
 
-            } else {
-                navigate("/404");
+                if (pageProject && pageSection) {
+                    setProjectName(pageProject.name);
+                    setProjectDescription(pageProject.description);
+                    setProjectUuid(pageProject.uuid);
+
+                    setSectionName(pageSection.name);
+                    setSectionDescription(pageSection.description);
+                    setSectionUuid(pageSection.uuid);
+
+                    setValues(section_uuid);
+
+                    document.title = `IndexedVault | ${pageProject.name} / ${pageSection.name}`;
+                } 
+
+            } catch (error) {
+                // navigate("/404");
+                
             }
+
         }
         fetchSection();
-        setValues(section_uuid);
-
     }, [navigate, section_uuid, project_uuid, setSectionDescription, setSectionName, setValues]);
 
     const [openConfirmationModal, setOpenConfirmationModal] = useState(false);
@@ -51,7 +64,7 @@ function SectionPage () {
             <div className="flex justify-between items-center w-full">
 
                 <div className="w-5/8">
-                    <BreadcrumbsComponent section_uuid={section_uuid} project_uuid={project_uuid}/>
+                    <BreadcrumbsComponent />
                 </div>
 
                 <div className="flex gap-2 shrink-0">

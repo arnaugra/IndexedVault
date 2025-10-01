@@ -15,6 +15,7 @@ import DragIcon from "../../svg/DragIcon";
 import { UUID } from "../../types/fields";
 import DownloadIcon from "../../svg/DownloadIcon";
 import { downloadProject } from "../../utils/downloadProject";
+import useSectionStore from "../../stores/SectionStore";
 
 function ProjectPage() {
     const [, navigate] = useLocation();
@@ -23,7 +24,9 @@ function ProjectPage() {
 
     const { draggedItem, overItem, onDragStart, onDragEnd, onDragOver, onDrop, reorderItems } = useDragAndDrop<SectionI>();
 
-    const { setProjectName, projectDescription, setProjectDescription } = useProjectStore();
+    const { setProjectName, projectDescription, setProjectDescription, setProjectUuid } = useProjectStore();
+    const { setSectionName, setSectionDescription, setSectionUuid } = useSectionStore();
+
     const { sections, setSections } = useSectionsStore();
 
     const handleReorder = (target: SectionI): React.DragEventHandler => {
@@ -38,20 +41,30 @@ function ProjectPage() {
 
     useEffect(() => {
         const fetchProject = async () => {
-            const pageProject = await Project.getByUuid(project_uuid!);
+            try {
+                const pageProject = await Project.getByUuid(project_uuid!);
 
-            if (pageProject) {
-                setProjectName(pageProject.name);
-                setProjectDescription(pageProject.description);
-                document.title = `IndexedVault | ${pageProject.name}`;
+                if (pageProject) {
+                    setProjectName(pageProject.name);
+                    setProjectDescription(pageProject.description);
+                    setProjectUuid(pageProject.uuid);
 
-            } else {
-                navigate("/404");
+                    setSectionName(undefined);
+                    setSectionDescription(undefined);
+                    setSectionUuid(undefined);
+
+                    setSections(project_uuid);
+
+                    document.title = `IndexedVault | ${pageProject.name}`;
+                }
+                
+            } catch (error) {
+                // navigate("/404");
+
             }
-            
+
         }
         fetchProject();
-        setSections(project_uuid);
     }, [project_uuid, setSections, setProjectName, setProjectDescription, navigate]);
 
     const [openConfirmationModal, setOpenConfirmationModal] = useState(false);
@@ -73,7 +86,7 @@ function ProjectPage() {
             <div className="flex justify-between items-center w-full">
 
                 <div className="w-5/8">
-                    <BreadcrumbsComponent project_uuid={project_uuid}/>
+                    <BreadcrumbsComponent />
                 </div>
 
                 <div className="flex gap-2 shrink-0">
