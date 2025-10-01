@@ -44,7 +44,7 @@ function SectionPage () {
                 } 
 
             } catch (error) {
-                // navigate("/404");
+                navigate("/404");
                 
             }
 
