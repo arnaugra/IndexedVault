@@ -12,6 +12,7 @@ import LockOpenIcon from "../svg/LockOpenIcon";
 import { uploadProject } from "../utils/downloadProject";
 import useToastStore, { ToastsTypes } from "../stores/ErrorStore";
 import useProjectsStore from "../stores/ProjectsStore";
+import UploadIcon from "../svg/UploadIcon";
 // import GitHubIssueIcon from "../svg/GitHubIssueIcon";
 
 function AppLayout({ children }: { children: React.ReactNode }) {
@@ -97,9 +98,8 @@ function AppLayout({ children }: { children: React.ReactNode }) {
                     <div className="tooltip flex items-center w-min" data-tip="Import Project">
                         {/* upload file */}
                         <label htmlFor="upload-project" className="btn btn-circle btn-ghost cursor-pointer">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4-4m0 0L8 8m4-4v12" />
-                            </svg>
+
+                            <UploadIcon className="w-6" />
                             <input type="file" id="upload-project" className="hidden" accept=".json,application/json" onChange={handleUploadProject} />
                         </label>
                     </div>
