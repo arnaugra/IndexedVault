@@ -21,11 +21,35 @@ const valueBase = {
 }
 
 function ValueModal(props: {section_uuid: UUID}) {
-    const { valueIdToEdit, openNewValue, setOpenNewValue, setValueIdToEdit } = useValueStore();
     const { setValues } = useValuesStore();
     const { encryptionKey } = useEncryptStore();
 
+    const { valueIdToEdit, openNewValue, setOpenNewValue, setValueIdToEdit } = useValueStore();
     const [localValue, setLocalValue] = useState(valueBase);
+
+    const closeValueModal = () => {
+        setValueIdToEdit(undefined);
+        setLocalValue(valueBase);
+        setOpenNewValue(false);
+    }
+
+    // init
+    const init = async () => {
+        if (valueIdToEdit) {
+            const value = await Value.getByUuid(valueIdToEdit!);
+            const finalValue = await inputValue(value?.value as string, value?.type as ValueTypes);
+            setLocalValue({
+                name: value?.name ?? "",
+                nameError: false,
+                value: finalValue.ok ? finalValue.value : "",
+                valueError: false,
+                type: value?.type as ValueTypes ?? ValueTypes.TEXT,
+                expirationDate: value?.expirationDate ?? undefined,
+                encryptionError: false,
+                encryptionKeyError: finalValue.ok === false && finalValue.error === encryptErrors.DECRYPTION_FAILED,
+            });
+        }
+    }
 
     const inputValue = useCallback( async (value: string, type: ValueTypes): Promise<
         { ok:true, value: string} |
@@ -45,34 +69,9 @@ function ValueModal(props: {section_uuid: UUID}) {
         if (!openNewValue) {
             setLocalValue(valueBase);
             return;
-        }
-        const init = async () => {
-            if (valueIdToEdit) {
-                const value = await Value.getByUuid(valueIdToEdit!);
-                const finalValue = await inputValue(value?.value as string, value?.type as ValueTypes);
-                setLocalValue({
-                    name: value?.name ?? "",
-                    nameError: false,
-                    value: finalValue.ok ? finalValue.value : "",
-                    valueError: false,
-                    type: value?.type as ValueTypes ?? ValueTypes.TEXT,
-                    expirationDate: value?.expirationDate ?? undefined,
-                    encryptionError: false,
-                    encryptionKeyError: finalValue.ok === false && finalValue.error === encryptErrors.DECRYPTION_FAILED,
-                });
-            }
-        }
-
+        }    
         init();
-    }, [openNewValue, 
-        valueIdToEdit, inputValue
-    ]);
-
-    const closeValueModal = () => {
-        setValueIdToEdit(undefined);
-        setLocalValue(valueBase);
-        setOpenNewValue(false);
-    }
+    }, [init]);
 
     const handleValueInput = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
