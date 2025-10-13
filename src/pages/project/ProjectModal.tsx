@@ -16,6 +16,7 @@ const projectBase = {
 
 function ProjectModal (props: {project_uuid?: UUID}) {
     const edit = props.project_uuid !== undefined;
+
     const [openNewProject, setOpenNewProject] = useState(false);
 
     const [LocalProject, setLocalProject] = useState(projectBase);
@@ -23,27 +24,27 @@ function ProjectModal (props: {project_uuid?: UUID}) {
     const { setProjects } = useProjectsStore();
     const { setProjectName, setProjectDescription } = useProjectStore();
 
+    //init
+    const init = async () => {
+        if (edit) {
+            await Project.getByUuid(props.project_uuid!).then((project) => {
+                setLocalProject({
+                    name: project?.name ?? "",
+                    nameError: false,
+                    description: project?.description ?? "",
+                });
+            });
+        }
+    }
+
     useEffect(() => {
         if (!openNewProject) {
             setLocalProject(projectBase);
             return;
         }
-        const init = async () => {
-            if (edit) {
-                await Project.getByUuid(props.project_uuid!).then((project) => {
-                    setLocalProject({
-                        name: project?.name ?? "",
-                        nameError: false,
-                        description: project?.description ?? "",
-                    });
-                });
-            }
-        }
 
         init();
-    }, [openNewProject,
-        edit, props.project_uuid,
-    ]);
+    }, [openNewProject, edit, props.project_uuid]);
 
     const handleProjectInput = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
