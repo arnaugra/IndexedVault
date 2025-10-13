@@ -8,6 +8,7 @@ import { ProjectI } from "../../db/interfaces";
 import { Project } from "../../db/Project";
 import DragIcon from "../../svg/DragIcon";
 import { UUID } from "../../types/fields";
+import { useSeo } from "../../hooks/useSeo";
 
 function HomePage () {
 
@@ -16,7 +17,7 @@ function HomePage () {
   // init
   useEffect(() => {
     setProjects();
-    document.title = "IndexedVault";
+    useSeo({ title: "IndexedVault"});
   }, [setProjects]);
 
   // drag and drop

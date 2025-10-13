@@ -12,6 +12,7 @@ import ValuesTable from "../value/ValuesTable";
 import BreadcrumbsComponent from "../../components/BreadcrumbsComponent";
 import { UUID } from "../../types/fields";
 import useProjectStore from "../../stores/ProjectStore";
+import { useSeo } from "../../hooks/useSeo";
 
 function SectionPage () {
     const [, navigate] = useLocation();
@@ -42,7 +43,7 @@ function SectionPage () {
 
                     setValues(section_uuid);
 
-                    document.title = `IndexedVault | ${pageProject.name} / ${pageSection.name}`;
+                    useSeo({ title: `IndexedVault | ${pageProject.name} / ${pageSection.name}` });
                 }
             } catch (error) {
                 navigate("/404");

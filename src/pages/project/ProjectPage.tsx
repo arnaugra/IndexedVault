@@ -16,6 +16,7 @@ import { UUID } from "../../types/fields";
 import DownloadIcon from "../../svg/DownloadIcon";
 import { downloadProject } from "../../utils/downloadProject";
 import useSectionStore from "../../stores/SectionStore";
+import { useSeo } from "../../hooks/useSeo";
 
 function ProjectPage() {
     const [, navigate] = useLocation();
@@ -44,7 +45,7 @@ function ProjectPage() {
     
                     setSections(project_uuid);
     
-                    document.title = `IndexedVault | ${pageProject.name}`;
+                    useSeo({ title: `IndexedVault | ${pageProject.name}` });
                 }
             } catch (error) {
                 navigate("/404");
