@@ -16,6 +16,7 @@ const sectionBase = {
 
 function SectionModal ({ project_uuid, section_uuid }: {project_uuid?: UUID, section_uuid?: UUID}) {
     const edit = section_uuid !== undefined;
+ 
     const [openNewSection, setOpenNewSection] = useState(false);
 
     const [LocalSection, setLocalSection] = useState(sectionBase);
@@ -23,27 +24,27 @@ function SectionModal ({ project_uuid, section_uuid }: {project_uuid?: UUID, sec
     const { setSections } = useSectionsStore();
     const { setSectionName, setSectionDescription } = useSectionStore();
 
+    // init
+    const init = async () => {
+        if (edit) {
+            await Section.getByUuid(section_uuid!).then((section) => {
+                setLocalSection({
+                    name: section?.name ?? "",
+                    nameError: false,
+                    description: section?.description ?? "",
+                });
+            });
+        }
+    }
+
     useEffect(() => {
         if (!openNewSection) {
             setLocalSection(sectionBase);
             return;
         }
-        const init = async () => {
-            if (edit) {
-                await Section.getByUuid(section_uuid!).then((section) => {
-                    setLocalSection({
-                        name: section?.name ?? "",
-                        nameError: false,
-                        description: section?.description ?? "",
-                    });
-                });
-            }
-        }
 
         init();
-    }, [openNewSection,
-        edit, section_uuid
-    ]);
+    }, [openNewSection, edit, section_uuid]);
 
     const handleSectionInput = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
