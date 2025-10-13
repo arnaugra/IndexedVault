@@ -27,32 +27,32 @@ function ProjectPage() {
     const { setProjectName, projectDescription, setProjectDescription, setProjectUuid } = useProjectStore();
     const { setSectionName, setSectionDescription, setSectionUuid } = useSectionStore();
 
-    // init
-    const fetchProject = async () => {
-        try {
-            const pageProject = await Project.getByUuid(project_uuid!);
-
-            if (pageProject) {
-                setProjectName(pageProject.name);
-                setProjectDescription(pageProject.description);
-                setProjectUuid(pageProject.uuid);
-
-                setSectionName(undefined);
-                setSectionDescription(undefined);
-                setSectionUuid(undefined);
-
-                setSections(project_uuid);
-
-                document.title = `IndexedVault | ${pageProject.name}`;
-            }
-        } catch (error) {
-            navigate("/404");
-        }
-    }
-
+    // init    
     useEffect(() => {
+        const fetchProject = async () => {
+            try {
+                const pageProject = await Project.getByUuid(project_uuid!);
+    
+                if (pageProject) {
+                    setProjectName(pageProject.name);
+                    setProjectDescription(pageProject.description);
+                    setProjectUuid(pageProject.uuid);
+    
+                    setSectionName(undefined);
+                    setSectionDescription(undefined);
+                    setSectionUuid(undefined);
+    
+                    setSections(project_uuid);
+    
+                    document.title = `IndexedVault | ${pageProject.name}`;
+                }
+            } catch (error) {
+                navigate("/404");
+            }
+        }
+
         fetchProject();
-    }, [fetchProject]);
+    }, [project_uuid, setSections, setProjectName, setProjectDescription, navigate]);
 
     // delete project
     const [openConfirmationModal, setOpenConfirmationModal] = useState(false);

@@ -25,32 +25,32 @@ function SectionPage () {
     const { setSectionName, sectionDescription, setSectionDescription, setSectionUuid } = useNewSectionStore();
 
     // init
-    const fetchSection = async () => {
-        try {
-            const pageProject = await Project.getByUuid(project_uuid);
-            const pageSection = await Section.getByUuid(section_uuid);
-
-            if (pageProject && pageSection) {
-                setProjectName(pageProject.name);
-                setProjectDescription(pageProject.description);
-                setProjectUuid(pageProject.uuid);
-
-                setSectionName(pageSection.name);
-                setSectionDescription(pageSection.description);
-                setSectionUuid(pageSection.uuid);
-
-                setValues(section_uuid);
-
-                document.title = `IndexedVault | ${pageProject.name} / ${pageSection.name}`;
-            }
-        } catch (error) {
-            navigate("/404");
-        }
-    }
-
     useEffect(() => {
+        const fetchSection = async () => {
+            try {
+                const pageProject = await Project.getByUuid(project_uuid);
+                const pageSection = await Section.getByUuid(section_uuid);
+
+                if (pageProject && pageSection) {
+                    setProjectName(pageProject.name);
+                    setProjectDescription(pageProject.description);
+                    setProjectUuid(pageProject.uuid);
+
+                    setSectionName(pageSection.name);
+                    setSectionDescription(pageSection.description);
+                    setSectionUuid(pageSection.uuid);
+
+                    setValues(section_uuid);
+
+                    document.title = `IndexedVault | ${pageProject.name} / ${pageSection.name}`;
+                }
+            } catch (error) {
+                navigate("/404");
+            }
+        }
+
         fetchSection();
-    }, []);
+    }, [navigate, section_uuid, project_uuid, setSectionDescription, setSectionName, setValues]);
 
     // delete section
     const [openConfirmationModal, setOpenConfirmationModal] = useState(false);
