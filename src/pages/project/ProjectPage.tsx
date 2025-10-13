@@ -54,6 +54,7 @@ function ProjectPage() {
         fetchProject();
     }, [fetchProject]);
 
+    // delete project
     const [openConfirmationModal, setOpenConfirmationModal] = useState(false);
     const deleteProject = async () => {
         await Project.delete(project_uuid);
