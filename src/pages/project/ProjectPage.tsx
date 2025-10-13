@@ -22,12 +22,46 @@ function ProjectPage() {
     const match = useRoute<{project_uuid: string}>("/project/:project_uuid")[1];
     const project_uuid = match?.project_uuid as UUID;
 
-    const { draggedItem, overItem, onDragStart, onDragEnd, onDragOver, onDrop, reorderItems } = useDragAndDrop<SectionI>();
+    const { sections, setSections } = useSectionsStore();
 
     const { setProjectName, projectDescription, setProjectDescription, setProjectUuid } = useProjectStore();
     const { setSectionName, setSectionDescription, setSectionUuid } = useSectionStore();
 
-    const { sections, setSections } = useSectionsStore();
+    // init
+    const fetchProject = async () => {
+        try {
+            const pageProject = await Project.getByUuid(project_uuid!);
+
+            if (pageProject) {
+                setProjectName(pageProject.name);
+                setProjectDescription(pageProject.description);
+                setProjectUuid(pageProject.uuid);
+
+                setSectionName(undefined);
+                setSectionDescription(undefined);
+                setSectionUuid(undefined);
+
+                setSections(project_uuid);
+
+                document.title = `IndexedVault | ${pageProject.name}`;
+            }
+        } catch (error) {
+            navigate("/404");
+        }
+    }
+
+    useEffect(() => {
+        fetchProject();
+    }, [fetchProject]);
+
+    const [openConfirmationModal, setOpenConfirmationModal] = useState(false);
+    const deleteProject = async () => {
+        await Project.delete(project_uuid);
+        navigate("/");
+    };
+
+    // drag and drop
+    const { draggedItem, overItem, onDragStart, onDragEnd, onDragOver, onDrop, reorderItems } = useDragAndDrop<SectionI>();
 
     const handleReorder = (target: SectionI): React.DragEventHandler => {
         return onDrop(target, async (from, to) => {
@@ -37,40 +71,6 @@ function ProjectPage() {
             }
             setSections(project_uuid);
         });
-    };
-
-    useEffect(() => {
-        const fetchProject = async () => {
-            try {
-                const pageProject = await Project.getByUuid(project_uuid!);
-
-                if (pageProject) {
-                    setProjectName(pageProject.name);
-                    setProjectDescription(pageProject.description);
-                    setProjectUuid(pageProject.uuid);
-
-                    setSectionName(undefined);
-                    setSectionDescription(undefined);
-                    setSectionUuid(undefined);
-
-                    setSections(project_uuid);
-
-                    document.title = `IndexedVault | ${pageProject.name}`;
-                }
-                
-            } catch (error) {
-                navigate("/404");
-
-            }
-
-        }
-        fetchProject();
-    }, [project_uuid, setSections, setProjectName, setProjectDescription, navigate]);
-
-    const [openConfirmationModal, setOpenConfirmationModal] = useState(false);
-    const deleteProject = async () => {
-        await Project.delete(project_uuid);
-        navigate("/");
     };
 
     const getOnDraggingClass = (projectUUID : UUID): string | undefined => {
