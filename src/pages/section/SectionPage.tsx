@@ -19,39 +19,40 @@ function SectionPage () {
     const project_uuid = match?.project_uuid as UUID;
     const section_uuid = match?.section_uuid as UUID;
 
-    const { setSectionName, sectionDescription, setSectionDescription, setSectionUuid } = useNewSectionStore();
-    const { setProjectName, setProjectDescription, setProjectUuid } = useProjectStore();
     const { setValues } = useValuesStore();
 
-    useEffect(() => {
-        const fetchSection = async () => {
-            try {
-                const pageProject = await Project.getByUuid(project_uuid);
-                const pageSection = await Section.getByUuid(section_uuid);
+    const { setProjectName, setProjectDescription, setProjectUuid } = useProjectStore();
+    const { setSectionName, sectionDescription, setSectionDescription, setSectionUuid } = useNewSectionStore();
 
-                if (pageProject && pageSection) {
-                    setProjectName(pageProject.name);
-                    setProjectDescription(pageProject.description);
-                    setProjectUuid(pageProject.uuid);
+    // init
+    const fetchSection = async () => {
+        try {
+            const pageProject = await Project.getByUuid(project_uuid);
+            const pageSection = await Section.getByUuid(section_uuid);
 
-                    setSectionName(pageSection.name);
-                    setSectionDescription(pageSection.description);
-                    setSectionUuid(pageSection.uuid);
+            if (pageProject && pageSection) {
+                setProjectName(pageProject.name);
+                setProjectDescription(pageProject.description);
+                setProjectUuid(pageProject.uuid);
 
-                    setValues(section_uuid);
+                setSectionName(pageSection.name);
+                setSectionDescription(pageSection.description);
+                setSectionUuid(pageSection.uuid);
 
-                    document.title = `IndexedVault | ${pageProject.name} / ${pageSection.name}`;
-                } 
+                setValues(section_uuid);
 
-            } catch (error) {
-                navigate("/404");
-                
+                document.title = `IndexedVault | ${pageProject.name} / ${pageSection.name}`;
             }
-
+        } catch (error) {
+            navigate("/404");
         }
-        fetchSection();
-    }, [navigate, section_uuid, project_uuid, setSectionDescription, setSectionName, setValues]);
+    }
 
+    useEffect(() => {
+        fetchSection();
+    }, []);
+
+    // delete section
     const [openConfirmationModal, setOpenConfirmationModal] = useState(false);
     const deleteProject = async () => {
         await Section.delete(section_uuid);
