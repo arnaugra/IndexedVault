@@ -11,9 +11,16 @@ import { UUID } from "../../types/fields";
 
 function HomePage () {
 
-  const { draggedItem, overItem, onDragStart, onDragEnd, onDragOver, onDrop, reorderItems } = useDragAndDrop<ProjectI>();
-
   const { projects, setProjects } = useProjectsStore();
+
+  // init
+  useEffect(() => {
+    setProjects();
+    document.title = "IndexedVault";
+  }, [setProjects]);
+
+  // drag and drop
+  const { draggedItem, overItem, onDragStart, onDragEnd, onDragOver, onDrop, reorderItems } = useDragAndDrop<ProjectI>();
 
   const handleReorder = (target: ProjectI): React.DragEventHandler => {
     return onDrop(target, async (from, to) => {
@@ -24,13 +31,6 @@ function HomePage () {
       setProjects();
     });
   };
-
-  // init
-  useEffect(() => {
-    setProjects();
-    document.title = "IndexedVault";
-  }
-  , [setProjects]);
 
   const getOnDraggingClass = (projectUUID: UUID): string | undefined => {
     if (!draggedItem) return;
