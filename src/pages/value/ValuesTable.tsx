@@ -18,14 +18,23 @@ import DragIcon from "../../svg/DragIcon";
 import { UUID } from "../../types/fields";
 
 function ValuesTable(props: {section_uuid: UUID}) {
+    const { setOpenModal, encryptionKey } = useEncryptStore();
 
     const { values, setValues } = useValuesStore();
     const { setValueIdToEdit, setOpenNewValue } = useValueStore();
-    const { setOpenModal, encryptionKey } = useEncryptStore();
-
-    const { draggedItem, overItem, onDragStart, onDragEnd, onDragOver, onDrop, reorderItems } = useDragAndDrop<ValueI>();
 
     const [valueIdToDelete, setValueIdToDelete] = useState<number | null>(null);
+
+    const deleteValue = async (uuid: UUID) => {
+        await Value.delete(uuid);
+        setValues(props.section_uuid);
+        setValueIdToDelete(null);
+    }
+
+    const dateFormat = (date: string) => new Date(date).toLocaleDateString('en-GB');
+
+    // drag and drop
+    const { draggedItem, overItem, onDragStart, onDragEnd, onDragOver, onDrop, reorderItems } = useDragAndDrop<ValueI>();
 
     const handleReorder = (target: ValueI): React.DragEventHandler => {
         return onDrop(target, async (from, to) => {
@@ -38,19 +47,14 @@ function ValuesTable(props: {section_uuid: UUID}) {
         });
     };
 
-    const deleteValue = async (uuid: UUID) => {
-        await Value.delete(uuid);
-        setValues(props.section_uuid);
-        setValueIdToDelete(null);
-    }
-
-    const dateFormat = (date: string) => new Date(date).toLocaleDateString('en-GB');
     const getOnDraggingClass = (projectId: number): string | undefined => {
         if (!draggedItem) return;
         if (draggedItem.id === projectId) return 'dragging';
         if (overItem?.id === projectId) return 'dragging-over';
         return 'not-dragging';
     };
+
+    // column widths
     const colwidths = [
         "flex w-3/12 px-4 py-3",
         "flex w-7/12 px-4 py-3",
