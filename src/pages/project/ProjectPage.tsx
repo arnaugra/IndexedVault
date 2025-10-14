@@ -1,5 +1,4 @@
 import { Link, useLocation, useRoute } from "wouter";
-import useProjectStore from "../../stores/ProjectStore";
 import { Project } from "../../db/Project";
 import { useEffect, useState } from "react";
 import ProjectModal from "./ProjectModal";
@@ -15,8 +14,8 @@ import DragIcon from "../../svg/DragIcon";
 import { UUID } from "../../types/fields";
 import DownloadIcon from "../../svg/DownloadIcon";
 import { downloadProject } from "../../utils/downloadProject";
-import useSectionStore from "../../stores/SectionStore";
 import { useSeo } from "../../hooks/useSeo";
+import { useProject } from "../../contexts/ProjectContext";
 
 function ProjectPage() {
     const [, navigate] = useLocation();
@@ -25,8 +24,7 @@ function ProjectPage() {
 
     const { sections, setSections } = useSectionsStore();
 
-    const { setProjectName, projectDescription, setProjectDescription, setProjectUuid } = useProjectStore();
-    const { setSectionName, setSectionDescription, setSectionUuid } = useSectionStore();
+    const { currentProject, setCurrentProject } = useProject();
 
     // init    
     useEffect(() => {
@@ -35,25 +33,21 @@ function ProjectPage() {
                 const pageProject = await Project.getByUuid(project_uuid!);
     
                 if (pageProject) {
-                    setProjectName(pageProject.name);
-                    setProjectDescription(pageProject.description);
-                    setProjectUuid(pageProject.uuid);
-    
-                    setSectionName(undefined);
-                    setSectionDescription(undefined);
-                    setSectionUuid(undefined);
-    
+                    setCurrentProject(pageProject);
                     setSections(project_uuid);
     
-                    useSeo({ title: `IndexedVault | ${pageProject.name}` });
                 }
             } catch (error) {
+                setCurrentProject(null);
                 navigate("/404");
             }
         }
 
         fetchProject();
-    }, [project_uuid, setSections, setProjectName, setProjectDescription, navigate]);
+    }, []);
+    
+    // SEO
+    useSeo({ title: `IndexedVault | ${currentProject?.name}` });
 
     // delete project
     const [openConfirmationModal, setOpenConfirmationModal] = useState(false);
@@ -113,7 +107,7 @@ function ProjectPage() {
 
                 </div>
             </div>
-            {projectDescription && <p className="text-gray-600 mt-1 whitespace-pre-line">{projectDescription}</p>}
+            {currentProject?.description && <p className="text-gray-600 mt-1 whitespace-pre-line">{currentProject.description}</p>}
             <div className="divider m-0"></div>
             <span>
                 <SectionModal project_uuid={project_uuid} />

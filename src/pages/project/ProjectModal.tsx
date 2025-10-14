@@ -5,8 +5,8 @@ import TextareaField from "../../components/TextareaField";
 import EditIcon from "../../svg/EditIcon";
 import { Project } from "../../db/Project";
 import useProjectsStore from "../../stores/ProjectsStore";
-import useProjectStore from "../../stores/ProjectStore";
 import { UUID } from "../../types/fields";
+import { useProject } from "../../contexts/ProjectContext";
 
 const projectBase = {
     name: "",
@@ -21,19 +21,15 @@ function ProjectModal (props: {project_uuid?: UUID}) {
 
     const [LocalProject, setLocalProject] = useState(projectBase);
 
+    const { currentProject, setCurrentProject } = useProject();
+
     const { setProjects } = useProjectsStore();
-    const { setProjectName, setProjectDescription } = useProjectStore();
 
     //init
     const init = async () => {
         if (edit) {
-            await Project.getByUuid(props.project_uuid!).then((project) => {
-                setLocalProject({
-                    name: project?.name ?? "",
-                    nameError: false,
-                    description: project?.description ?? "",
-                });
-            });
+            LocalProject.name = currentProject?.name || "";
+            LocalProject.description = currentProject?.description || "";
         }
     }
 
@@ -44,7 +40,7 @@ function ProjectModal (props: {project_uuid?: UUID}) {
         }
 
         init();
-    }, [openNewProject, edit, props.project_uuid]);
+    }, []);
 
     const handleProjectInput = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -62,8 +58,11 @@ function ProjectModal (props: {project_uuid?: UUID}) {
                 name: LocalProject.name,
                 description: LocalProject.description,
             });
-            setProjectName(LocalProject.name);
-            setProjectDescription(LocalProject.description);
+            setCurrentProject({
+                ...currentProject!,
+                name: LocalProject.name,
+                description: LocalProject.description,
+            });
         } else {
             await Project.create({
                 name: LocalProject.name,
