@@ -17,8 +17,10 @@ function HomePage () {
   // init
   useEffect(() => {
     setProjects();
-    useSeo({ title: "IndexedVault"});
   }, [setProjects]);
+  
+  // SEO
+  useSeo({ title: "IndexedVault"});
 
   // drag and drop
   const { draggedItem, overItem, onDragStart, onDragEnd, onDragOver, onDrop, reorderItems } = useDragAndDrop<ProjectI>();
