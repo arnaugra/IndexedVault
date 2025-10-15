@@ -7,12 +7,14 @@ import Page404 from './pages/Page404'
 import SectionPage from './pages/section/SectionPage'
 import { ProjectProvider } from './contexts/ProjectContext'
 import { SectionProvider } from './contexts/SectionContext'
+import { ValueProvider } from './contexts/ValueContext'
 
 function App() {
 
   return (
     <ProjectProvider>
       <SectionProvider>
+        <ValueProvider>
           <AppLayout>
             <Router>
               <Switch>
@@ -23,6 +25,7 @@ function App() {
               </Switch>
             </Router>
           </ AppLayout>
+        </ValueProvider>
       </SectionProvider>
     </ProjectProvider>
   )

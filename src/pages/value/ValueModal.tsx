@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import useValueStore, { ValueTypes } from "../../stores/ValueStore";
+import { ValueTypes } from "../../stores/ValueStore";
 import useValuesStore from "../../stores/ValuesStore";
 import useEncryptStore from "../../stores/EncryptStore";
 import { Value } from "../../db/Value";
@@ -8,6 +8,7 @@ import InputField from "../../components/InputField";
 import { decrypt, encrypt, encryptErrors } from "../../utils/encrypt";
 import EditIcon from "../../svg/EditIcon";
 import { UUID } from "../../types/fields";
+import { useValue } from "../../contexts/ValueContext";
 
 const valueBase = {
     name: "",
@@ -21,14 +22,15 @@ const valueBase = {
 }
 
 function ValueModal(props: {section_uuid: UUID}) {
-    const { setValues } = useValuesStore();
+    const { setValues, openNewValue, setOpenNewValue, valueIdToEdit, setValueIdToEdit } = useValuesStore();
     const { encryptionKey } = useEncryptStore();
 
-    const { valueIdToEdit, openNewValue, setOpenNewValue, setValueIdToEdit } = useValueStore();
+    const { setCurrentValue } = useValue();
     const [localValue, setLocalValue] = useState(valueBase);
 
     const closeValueModal = () => {
         setValueIdToEdit(undefined);
+        setCurrentValue(null);
         setLocalValue(valueBase);
         setOpenNewValue(false);
     }
@@ -48,6 +50,9 @@ function ValueModal(props: {section_uuid: UUID}) {
                 encryptionError: false,
                 encryptionKeyError: finalValue.ok === false && finalValue.error === encryptErrors.DECRYPTION_FAILED,
             });
+
+            console.log(localValue);
+            
         }
     }
 
@@ -66,12 +71,14 @@ function ValueModal(props: {section_uuid: UUID}) {
     }, [encryptionKey]);
 
     useEffect(() => {
+        
+            console.log(localValue);
         if (!openNewValue) {
             setLocalValue(valueBase);
             return;
         }    
         init();
-    }, [init]);
+    }, [valueIdToEdit]);
 
     const handleValueInput = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -119,6 +126,7 @@ function ValueModal(props: {section_uuid: UUID}) {
 
         setLocalValue(valueBase);
         setValues(props.section_uuid);
+        setCurrentValue(null);
         setValueIdToEdit(undefined);
         setOpenNewValue(false);
     }

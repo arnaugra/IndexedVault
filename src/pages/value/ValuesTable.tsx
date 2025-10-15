@@ -2,7 +2,7 @@ import { useState } from "react";
 import ConfirmModalComponent from "../../components/ConfirmModalComponent";
 import { Value } from "../../db/Value";
 import useValuesStore from "../../stores/ValuesStore"
-import useValueStore, { ValueTypes } from "../../stores/ValueStore";
+import { ValueTypes } from "../../stores/ValueStore";
 import BinIcon from "../../svg/BinIcon";
 import EditIcon from "../../svg/EditIcon";
 import CopyIcon from "../../svg/CopyIcon";
@@ -16,12 +16,13 @@ import { useDragAndDrop } from "../../hooks/useDragAndDrop";
 import { ValueI } from "../../db/interfaces";
 import DragIcon from "../../svg/DragIcon";
 import { UUID } from "../../types/fields";
+import { useValue } from "../../contexts/ValueContext";
 
 function ValuesTable(props: {section_uuid: UUID}) {
     const { setOpenModal, encryptionKey } = useEncryptStore();
 
-    const { values, setValues } = useValuesStore();
-    const { setValueIdToEdit, setOpenNewValue } = useValueStore();
+    const { values, setValues, setOpenNewValue, setValueIdToEdit } = useValuesStore();
+    const { setCurrentValue } = useValue();
 
     const [valueIdToDelete, setValueIdToDelete] = useState<number | null>(null);
 
@@ -159,7 +160,7 @@ function ValuesTable(props: {section_uuid: UUID}) {
                                         </div>
                                     </article>
                                     <article role="cell" data-column={`value-${value.id}-actions`} className={`${colwidths[3]} flex gap-1 items-center`}>
-                                        <button className="btn btn-ghost btn-circle btn-xs" onClick={() => {setValueIdToEdit(value.uuid); setOpenNewValue(true)}}>
+                                        <button className="btn btn-ghost btn-circle btn-xs" onClick={() => {setCurrentValue(value); setValueIdToEdit(value.uuid!); setOpenNewValue(true)}}>
                                             <EditIcon className="w-4" />
                                         </button>
                                         <button className="btn btn-ghost btn-circle btn-xs text-error" onClick={() => setValueIdToDelete(value.id!)}>
