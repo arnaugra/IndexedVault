@@ -8,10 +8,10 @@ import { useEffect } from "react";
 import useSideTreeStore from "../stores/SideTreeStore";
 import useProjectsStore from "../stores/ProjectsStore";
 import useSectionsStore from "../stores/SectionsStore";
-import useProjectStore from "../stores/ProjectStore";
-import useSectionStore from "../stores/SectionStore";
 import useValuesStore from "../stores/ValuesStore";
 import { ValueTypes } from "../stores/ValueStore";
+import { useProject } from "../contexts/ProjectContext";
+import { useSection } from "../contexts/SectionContext";
 
 function SideTree() {
     const [location] = useLocation();
@@ -23,8 +23,8 @@ function SideTree() {
     const { tree, setTree } = useSideTreeStore();
     const { projects } = useProjectsStore();
     const { sections } = useSectionsStore();
-    const { projectName, projectDescription } = useProjectStore();
-    const { sectionName, sectionDescription } = useSectionStore();
+    const { currentProject } = useProject();
+    const { currentSection } = useSection();
     const { values } = useValuesStore();
 
     useEffect(() => {
@@ -32,8 +32,8 @@ function SideTree() {
     }
     , [
         setTree,
-        projects, projectName, projectDescription,
-        sections, sectionName, sectionDescription,
+        projects, currentProject,
+        sections, currentSection,
         values
     ]);
 
