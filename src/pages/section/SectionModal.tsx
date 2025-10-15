@@ -5,7 +5,6 @@ import TextareaField from "../../components/TextareaField";
 import EditIcon from "../../svg/EditIcon";
 import { Section } from "../../db/Section";
 import useSectionsStore from "../../stores/SectionsStore";
-import useSectionStore from "../../stores/SectionStore";
 import { UUID } from "../../types/fields";
 import { useSection } from "../../contexts/SectionContext";
 
