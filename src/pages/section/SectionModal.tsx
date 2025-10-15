@@ -7,6 +7,7 @@ import { Section } from "../../db/Section";
 import useSectionsStore from "../../stores/SectionsStore";
 import useSectionStore from "../../stores/SectionStore";
 import { UUID } from "../../types/fields";
+import { useSection } from "../../contexts/SectionContext";
 
 const sectionBase = {
     name: "",
@@ -22,7 +23,7 @@ function SectionModal ({ project_uuid, section_uuid }: {project_uuid?: UUID, sec
     const [LocalSection, setLocalSection] = useState(sectionBase);
 
     const { setSections } = useSectionsStore();
-    const { setSectionName, setSectionDescription } = useSectionStore();
+    const { currentSection, setCurrentSection } = useSection();
 
     // init
     const init = async () => {
@@ -62,8 +63,11 @@ function SectionModal ({ project_uuid, section_uuid }: {project_uuid?: UUID, sec
                 name: LocalSection.name,
                 description: LocalSection.description,
             });
-            setSectionName(LocalSection.name);
-            setSectionDescription(LocalSection.description);
+            setCurrentSection({
+                ...currentSection!,
+                name: LocalSection.name,
+                description: LocalSection.description,
+            });
         } else {
             if (project_uuid) {
                 await Section.create({

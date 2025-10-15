@@ -3,7 +3,6 @@ import { Section } from "../../db/Section";
 import { Project } from "../../db/Project";
 import { useEffect, useState } from "react";
 import useValuesStore from "../../stores/ValuesStore";
-import useNewSectionStore from "../../stores/SectionStore";
 import SectionModal from "./SectionModal";
 import ConfirmModalComponent from "../../components/ConfirmModalComponent";
 import BinIcon from "../../svg/BinIcon";
@@ -11,8 +10,9 @@ import ValueModal from "../value/ValueModal";
 import ValuesTable from "../value/ValuesTable";
 import BreadcrumbsComponent from "../../components/BreadcrumbsComponent";
 import { UUID } from "../../types/fields";
-import useProjectStore from "../../stores/ProjectStore";
 import { useSeo } from "../../hooks/useSeo";
+import { useProject } from "../../contexts/ProjectContext";
+import { useSection } from "../../contexts/SectionContext";
 
 function SectionPage () {
     const [, navigate] = useLocation();
@@ -22,8 +22,8 @@ function SectionPage () {
 
     const { setValues } = useValuesStore();
 
-    const { setProjectName, setProjectDescription, setProjectUuid } = useProjectStore();
-    const { setSectionName, sectionDescription, setSectionDescription, setSectionUuid } = useNewSectionStore();
+    const { currentProject, setCurrentProject } = useProject();
+    const { currentSection, setCurrentSection } = useSection();
 
     // init
     useEffect(() => {
@@ -33,25 +33,24 @@ function SectionPage () {
                 const pageSection = await Section.getByUuid(section_uuid);
 
                 if (pageProject && pageSection) {
-                    setProjectName(pageProject.name);
-                    setProjectDescription(pageProject.description);
-                    setProjectUuid(pageProject.uuid);
+                    setCurrentProject(pageProject);
 
-                    setSectionName(pageSection.name);
-                    setSectionDescription(pageSection.description);
-                    setSectionUuid(pageSection.uuid);
+                    setCurrentSection(pageSection);
 
                     setValues(section_uuid);
-
-                    useSeo({ title: `IndexedVault | ${pageProject.name} / ${pageSection.name}` });
                 }
             } catch (error) {
+                setCurrentProject(null);
+                setCurrentSection(null);
                 navigate("/404");
             }
         }
 
         fetchSection();
-    }, [navigate, section_uuid, project_uuid, setSectionDescription, setSectionName, setValues]);
+    }, []);
+
+    // SEO
+    useSeo({ title: `IndexedVault | ${currentProject?.name} / ${currentSection?.name}` });
 
     // delete section
     const [openConfirmationModal, setOpenConfirmationModal] = useState(false);
@@ -79,7 +78,7 @@ function SectionPage () {
                     </ConfirmModalComponent>
                 </div>
             </div>
-            {sectionDescription && <p className="text-gray-600 mt-1 whitespace-pre-line">{sectionDescription}</p>}
+            {currentSection?.description && <p className="text-gray-600 mt-1 whitespace-pre-line">{currentSection?.description}</p>}
             <div className="divider m-0"></div>
             <span>
                 <ValueModal section_uuid={section_uuid} />
