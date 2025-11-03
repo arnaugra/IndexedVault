@@ -9,13 +9,22 @@ import { Project } from "../../db/Project";
 import DragIcon from "../../svg/DragIcon";
 import { UUID } from "../../types/fields";
 import { useSeo } from "../../hooks/useSeo";
+import { useProject } from "../../contexts/ProjectContext";
+import { useSection } from "../../contexts/SectionContext";
+import { useValue } from "../../contexts/ValueContext";
 
 function HomePage () {
 
   const { projects, setProjects } = useProjectsStore();
+  const { setCurrentProject } = useProject();
+  const { setCurrentSection } = useSection();
+  const { setCurrentValue } = useValue();
 
   // init
   useEffect(() => {
+    setCurrentProject(null)
+    setCurrentSection(null)
+    setCurrentValue(null)
     setProjects();
   }, [setProjects]);
   

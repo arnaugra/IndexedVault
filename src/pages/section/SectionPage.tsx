@@ -13,6 +13,7 @@ import { UUID } from "../../types/fields";
 import { useSeo } from "../../hooks/useSeo";
 import { useProject } from "../../contexts/ProjectContext";
 import { useSection } from "../../contexts/SectionContext";
+import { useValue } from "../../contexts/ValueContext";
 
 function SectionPage () {
     const [, navigate] = useLocation();
@@ -24,6 +25,7 @@ function SectionPage () {
 
     const { currentProject, setCurrentProject } = useProject();
     const { currentSection, setCurrentSection } = useSection();
+    const { setCurrentValue } = useValue();
 
     // init
     useEffect(() => {
@@ -34,9 +36,8 @@ function SectionPage () {
 
                 if (pageProject && pageSection) {
                     setCurrentProject(pageProject);
-
                     setCurrentSection(pageSection);
-
+                    setCurrentValue(null);
                     setValues(section_uuid);
                 }
             } catch (error) {

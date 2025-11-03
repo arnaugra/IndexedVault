@@ -16,6 +16,8 @@ import DownloadIcon from "../../svg/DownloadIcon";
 import { downloadProject } from "../../utils/downloadProject";
 import { useSeo } from "../../hooks/useSeo";
 import { useProject } from "../../contexts/ProjectContext";
+import { useSection } from "../../contexts/SectionContext";
+import { useValue } from "../../contexts/ValueContext";
 
 function ProjectPage() {
     const [, navigate] = useLocation();
@@ -25,6 +27,8 @@ function ProjectPage() {
     const { sections, setSections } = useSectionsStore();
 
     const { currentProject, setCurrentProject } = useProject();
+    const { setCurrentSection } = useSection();
+    const { setCurrentValue } = useValue();
 
     // init    
     useEffect(() => {
@@ -34,6 +38,8 @@ function ProjectPage() {
     
                 if (pageProject) {
                     setCurrentProject(pageProject);
+                    setCurrentSection(null);
+                    setCurrentValue(null);
                     setSections(project_uuid);
     
                 }
