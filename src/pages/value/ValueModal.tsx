@@ -50,8 +50,6 @@ function ValueModal(props: {section_uuid: UUID}) {
                 encryptionError: false,
                 encryptionKeyError: finalValue.ok === false && finalValue.error === encryptErrors.DECRYPTION_FAILED,
             });
-
-            console.log(localValue);
             
         }
     }
@@ -71,8 +69,6 @@ function ValueModal(props: {section_uuid: UUID}) {
     }, [encryptionKey]);
 
     useEffect(() => {
-        
-            console.log(localValue);
         if (!openNewValue) {
             setLocalValue(valueBase);
             return;
